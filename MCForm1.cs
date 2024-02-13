@@ -3,8 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TwinCAT_ADS_MC
-{
+namespace TwinCAT_ADS_MC;
 
 public partial class MCForm1 : Form
 {
@@ -22,5 +21,4 @@ public partial class MCForm1 : Form
         readVelText.Text = Convert.ToString(readVelValue);
         readAcclText.Text = Convert.ToString(readAcclValue);
     }
-}
 }

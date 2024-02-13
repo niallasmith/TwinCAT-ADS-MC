@@ -37,6 +37,8 @@ partial class MCForm1
     public Label moveRelativeLabel;
     public RadioButton moveHomeRadio;
     public Label moveHomeLabel;
+    public Label plcConnectedLabel;
+    public Label axisConnectedLabel;
     /// <summary>
     ///  Required designer variable.
     /// </summary>
@@ -334,6 +336,27 @@ partial class MCForm1
 
         #endregion
 
+        #region Connected labels
+        
+        plcConnectedLabel = new Label();
+        plcConnectedLabel.Size = new Size(100,20);
+        plcConnectedLabel.Location = new Point(375,60);
+        plcConnectedLabel.Text = "Disconnected";
+        plcConnectedLabel.Font = new Font(FontFamily.GenericSansSerif, 8.0F, FontStyle.Italic);
+        this.Controls.Add(plcConnectedLabel);
+
+        axisConnectedLabel = new Label();
+        axisConnectedLabel.Size = new Size(100,20);
+        axisConnectedLabel.Location = new Point(225,150);
+        axisConnectedLabel.Text = "Disconnected";
+        axisConnectedLabel.Font = new Font(FontFamily.GenericSansSerif, 8.0F, FontStyle.Italic);
+        this.Controls.Add(axisConnectedLabel);   
+
+
+        #endregion
+
         CenterToScreen();
+
+        SetupForm1.FormClosed += new FormClosedEventHandler(SetupForm1_Closed);
     }
 }

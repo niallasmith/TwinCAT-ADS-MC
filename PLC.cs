@@ -1,13 +1,14 @@
 namespace TwinCAT_ADS_MC;
 
 using System.Data;
+using System.Xml;
 using TwinCAT.Ads;
 
 public class PLC 
 {
 
     // removing all private ADS client stuff FOR NOW
-    /*
+    
     private AdsClient _tcADS = new AdsClient();
     public AdsClient TcADS
     {
@@ -35,9 +36,9 @@ public class PLC
         get { return _port; }
         set { _port = value; }
     }
-    */
+    
 
-    public AdsClient TcADS = new AdsClient();
+    //public AdsClient TcADS = new AdsClient();
     
     public PLC(string AMSID, int port)
     {
@@ -53,9 +54,6 @@ public class PLC
                 //Do Nothing - Usually means invalid AMS NET ID format
             }      
     }
-
-    // removing all ADS state functions FOR NOW
-    /*
     
     public bool checkConnection()
     {
@@ -99,5 +97,5 @@ public class PLC
         };
         return checkAdsState();
     }
-    */
+    
 }

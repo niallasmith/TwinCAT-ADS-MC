@@ -14,6 +14,7 @@ public partial class MCForm1
     public ushort readVelValue;
     public ushort readAcclValue;
     public ushort axesNum = 1;
+    public static SetupForm1 SetupForm1 = new SetupForm1();
     //public Program myPlc;
     private void connectButton_Click(object sender, EventArgs e) // initialise button pressed
     {
@@ -36,9 +37,30 @@ public partial class MCForm1
             AMSID = userAMSIDText.Text;
         }
 
+        try
+        {
+            int value = Convert.ToInt32(userPortText.Text);
+        }
+        catch
+        {
+            MessageBox.Show("Invalid port");
+            return;
+        }
+
         Port = Convert.ToInt32(userPortText.Text);
 
         myPLC = new PLC(AMSID,Port);
+
+        if (myPLC.IsStateRun())
+        {
+            plcConnectedLabel.Text = "Connected";
+        }
+        else
+        {
+            MessageBox.Show("PLC not in Run state, probably because of an incorrect Port");
+            plcConnectedLabel.Text = "Disonnected";
+        }
+        
         //ncAxis = new NCAxis(myPLC, axesNum);
     }
 
@@ -143,7 +165,8 @@ public partial class MCForm1
 
     private void axesSetupButton_Click(object sender, EventArgs e) // initialise button pressed
     {
-        // do something
+        //Application.Run(SetupForm1);
+        SetupForm1.ShowDialog();
     }
 
 
@@ -243,6 +266,7 @@ public partial class MCForm1
         {
             axesNum = Convert.ToUInt16(axesNumText.Text);
             ncAxis = new NCAxis(myPLC, axesNum);
+            axisConnectedLabel.Text = "Connected";
         }
         catch
         {
@@ -250,5 +274,11 @@ public partial class MCForm1
             axesNumText.Text = "1";
             return;
         }
+    }
+
+    private void SetupForm1_Closed(object sender, EventArgs e)
+    {
+        // push changes to NC axis (put setup bool variable true?)
+        System.Console.WriteLine("form closed");
     }
 }
