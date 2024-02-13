@@ -237,7 +237,7 @@ public partial class MCForm1
         }
     }
 
-    private void axesNumText_Leave(object sender, EventArgs e)
+    private void axisConnectButton_Click(object sender, EventArgs e)
     {
         try
         {

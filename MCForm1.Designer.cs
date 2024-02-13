@@ -10,6 +10,7 @@ partial class MCForm1
     public Button connectButton;
     public Label axesNumLabel;
     public TextBox axesNumText;
+    public Button axisConnectButton;
     public Button axesSetupButton;
     //public Button newSetPos;
     //public Button newVelCmd;
@@ -53,7 +54,6 @@ partial class MCForm1
         }
         base.Dispose(disposing);
     }
-
 
     private void InitializeComponent()
     {
@@ -141,10 +141,21 @@ partial class MCForm1
         axesNumText.Size = new Size(50,30);
         axesNumText.Location = new Point(150,110);
         axesNumText.Font = new Font(FontFamily.GenericSansSerif, 16.0F, FontStyle.Bold);
-        axesNumText.Leave += new EventHandler(axesNumText_Leave);
-        axesNumText.MouseLeave += new EventHandler(axesNumText_Leave);
+        //axesNumText.Leave += new EventHandler(axesNumText_Leave);
+        //axesNumText.MouseLeave += new EventHandler(axesNumText_Leave);
         axesNumText.Text = "1";
         this.Controls.Add(axesNumText);
+
+        #endregion
+
+        #region Axes connect button
+
+        axisConnectButton = new Button();
+        axisConnectButton.Size = new Size(75,40);
+        axisConnectButton.Location = new Point(225,105);
+        axisConnectButton.Text = "Connect to Axis";
+        this.Controls.Add(axisConnectButton);
+        axisConnectButton.Click += new EventHandler(axisConnectButton_Click);
 
         #endregion
 
@@ -152,7 +163,7 @@ partial class MCForm1
 
         axesSetupButton = new Button();
         axesSetupButton.Size = new Size(75,40);
-        axesSetupButton.Location = new Point(275,105);
+        axesSetupButton.Location = new Point(350,105);
         axesSetupButton.Text = "Axes Setup";
         this.Controls.Add(axesSetupButton);
         axesSetupButton.Click += new EventHandler(axesSetupButton_Click);
