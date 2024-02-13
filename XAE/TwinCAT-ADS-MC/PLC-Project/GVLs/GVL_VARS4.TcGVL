@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_VARS4" Id="{f457a932-0699-485e-a247-5fa56eb0ac91}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	position: UINT := 0;
+	velocity: UINT := 0;
+	acceleration: UINT := 0;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

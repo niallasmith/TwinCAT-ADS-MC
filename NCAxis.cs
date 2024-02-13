@@ -8,9 +8,10 @@ namespace TwinCAT_ADS_MC;
 
 public class NCAxis
 {
-    public uint ftestValue1Handle;  // handles for PLC global variables
-    public uint ftestValue2Handle;
-    public uint btestValue3Handle;
+    public uint fpositionHandle;  // handles for PLC global variables
+    public uint fvelocityHandle;
+    public uint faccelerationHandle;
+    public ushort axisID;
 
     private uint _axisID;
     public uint AxisID
@@ -19,18 +20,19 @@ public class NCAxis
         set { _axisID = value; }
     }
 
-    public NCAxis(PLC plc)  // NCAxis constructor
+    public NCAxis(PLC plc, ushort axisID)  // NCAxis constructor
     {
-        UpdateAxisInstance(plc);
+        UpdateAxisInstance(plc, axisID);
     }
 
-    public void UpdateAxisInstance(PLC plc) // create variable handles
+    public void UpdateAxisInstance(PLC plc, ushort axisID) // create variable handles
     {
         try
         {
-            ftestValue1Handle = plc.TcADS.CreateVariableHandle("GVL_Vars.testValue1");
-            ftestValue2Handle = plc.TcADS.CreateVariableHandle("GVL_Vars.testValue2");
-            btestValue3Handle = plc.TcADS.CreateVariableHandle("GVL_Vars.testValue3");
+            fpositionHandle = plc.TcADS.CreateVariableHandle("GVL_VARS" + axisID + ".position");
+            fvelocityHandle = plc.TcADS.CreateVariableHandle("GVL_VARS" + axisID + ".velocity");
+            faccelerationHandle = plc.TcADS.CreateVariableHandle("GVL_VARS" + axisID + ".acceleration");
+            //btestValue3Handle = plc.TcADS.CreateVariableHandle("GVL_Vars.testValue3");
             System.Console.WriteLine("created variable handles successfully");
         }
         catch
@@ -40,26 +42,26 @@ public class NCAxis
 
     }
 
-    public void WriteValue1(PLC plc, ushort value) // write value to PLC
+    public void WritePosition(PLC plc, ushort value) // write value to PLC
     {
-        plc.TcADS.WriteAny(ftestValue1Handle,value);
+        plc.TcADS.WriteAny(fpositionHandle,value);
     }
 
-    public void WriteValue2(PLC plc, ushort value)
+    public void WriteVelocity(PLC plc, ushort value)
     {
-        plc.TcADS.WriteAny(ftestValue2Handle,value);
+        plc.TcADS.WriteAny(fvelocityHandle,value);
     }
 
-    public void WriteValue3(PLC plc, bool value)
+    public void WriteAcceleration(PLC plc, ushort value)
     {
-        plc.TcADS.WriteAny(btestValue3Handle,value);
+        plc.TcADS.WriteAny(faccelerationHandle,value);
     }
 
-    public ushort ReadValue1(PLC plc) // read value from PLC
+    public ushort ReadPosition(PLC plc) // read value from PLC
     {
         try
         {
-            ushort resp = plc.TcADS.ReadAny<ushort>(ftestValue1Handle);
+            ushort resp = plc.TcADS.ReadAny<ushort>(fpositionHandle);
             return resp;
         }
         catch
@@ -68,11 +70,24 @@ public class NCAxis
         }
     }
 
-    public ushort ReadValue2(PLC plc)
+    public ushort ReadVelocity(PLC plc)
     {
         try
         {
-            ushort resp = plc.TcADS.ReadAny<ushort>(ftestValue2Handle);
+            ushort resp = plc.TcADS.ReadAny<ushort>(fvelocityHandle);
+            return resp;
+        }
+        catch
+        {
+            return 0; // if error, return 0
+        }
+    }
+
+    public ushort ReadAcceleration(PLC plc)
+    {
+        try
+        {
+            ushort resp = plc.TcADS.ReadAny<ushort>(faccelerationHandle);
             return resp;
         }
         catch

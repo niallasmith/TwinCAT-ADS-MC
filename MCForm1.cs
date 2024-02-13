@@ -20,6 +20,7 @@ public partial class MCForm1 : Form
         //System.Console.WriteLine("refresh data");
         readPosText.Text = Convert.ToString(readPosValue);
         readVelText.Text = Convert.ToString(readVelValue);
+        readAcclText.Text = Convert.ToString(readAcclValue);
     }
 }
 }
