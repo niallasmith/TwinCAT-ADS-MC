@@ -5,10 +5,7 @@ using System.Xml;
 using TwinCAT.Ads;
 
 public class PLC 
-{
-
-    // removing all private ADS client stuff FOR NOW
-    
+{    
     private AdsClient _tcADS = new AdsClient();
     public AdsClient TcADS
     {

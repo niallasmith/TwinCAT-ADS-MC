@@ -217,6 +217,12 @@ public partial class MCForm1
         setPosText.Text = "";
         setVelText.Text = "";
         setAcclText.Text = "";
+        WriteExecute();
+    }
+
+    private void WriteExecute()
+    {
+        ncAxis.WriteExecute(myPLC, true);
     }
 
     private void WritePosition()

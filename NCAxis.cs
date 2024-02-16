@@ -11,6 +11,7 @@ public class NCAxis
     public uint fpositionHandle;  // handles for PLC global variables
     public uint fvelocityHandle;
     public uint faccelerationHandle;
+    public uint bexecuteHandle;
     public ushort axisID;
 
     private uint _axisID;
@@ -32,7 +33,7 @@ public class NCAxis
             fpositionHandle = plc.TcADS.CreateVariableHandle("GVL_VARS" + axisID + ".position");
             fvelocityHandle = plc.TcADS.CreateVariableHandle("GVL_VARS" + axisID + ".velocity");
             faccelerationHandle = plc.TcADS.CreateVariableHandle("GVL_VARS" + axisID + ".acceleration");
-            //btestValue3Handle = plc.TcADS.CreateVariableHandle("GVL_Vars.testValue3");
+            bexecuteHandle = plc.TcADS.CreateVariableHandle("GVL_VARS" + axisID + ".execute");
             System.Console.WriteLine("created variable handles successfully");
         }
         catch
@@ -94,6 +95,11 @@ public class NCAxis
         {
             return 0; // if error, return 0
         }
+    }
+
+    public void WriteExecute(PLC plc, bool value)
+    {
+        plc.TcADS.WriteAny(bexecuteHandle,value);
     }
 
 }

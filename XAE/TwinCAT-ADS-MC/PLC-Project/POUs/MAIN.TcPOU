@@ -1,13 +1,79 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1">
-  <POU Name="MAIN" Id="{f070e0eb-d52d-4666-8d92-3578df9d3e28}">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{f070e0eb-d52d-4666-8d92-3578df9d3e28}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+	nState: UINT := 0;
+	Axis1 : AXIS_REF;
+	MoveAbsolute : MC_MoveAbsolute;
+	AxisPower : MC_Power;
+	Reset : MC_Reset;
 END_VAR
-]]>
-    </Declaration>
+]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[Axis1();
+
+CASE nState OF
+	0:
+	nState := 10;
+	
+	10:
+	MoveAbsolute(Axis:=Axis1,Execute:=FALSE);
+	Reset(Axis:=Axis1,Execute:=FALSE);
+	nState := 20;
+	
+	20:
+	AxisPower(Axis:=Axis1,
+			Enable:=TRUE,
+			Enable_Positive:=TRUE,
+			Enable_Negative:=TRUE);
+			
+	IF GVL_VARS1.execute THEN
+		nState := 30;
+	END_IF
+	
+	
+	30:
+	MoveAbsolute(Axis:=Axis1,
+					Position:=GVL_VARS1.position,
+					Velocity:=GVL_VARS1.velocity);
+	MoveAbsolute(Axis:=Axis1,
+					Execute:=TRUE);		
+	IF MoveAbsolute.Done THEN
+		MoveAbsolute(Axis:=Axis1,Execute:=FALSE);
+	END_IF
+	GVL_VARS1.execute := FALSE;
+	nState := 10;
+END_CASE
+
+
+//AxisPower(Axis:=Axis1);
+//MoveAbsolute(Axis:=Axis1);
+//Reset(Axis:=Axis1);]]></ST>
     </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="10" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="35" Count="4" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="42" Count="7" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="61" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

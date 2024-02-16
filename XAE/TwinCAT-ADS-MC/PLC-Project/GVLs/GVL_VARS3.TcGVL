@@ -6,6 +6,7 @@ VAR_GLOBAL
 	position: UINT := 0;
 	velocity: UINT := 0;
 	acceleration: UINT := 0;
+	execute: BOOL := FALSE;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
