@@ -219,8 +219,8 @@ public partial class MCForm1
         }
         else
         {
-            setPosText.Text = "error";
-            setVelText.Text = "error";
+            setPosText.Text = "Error";
+            setVelText.Text = "Error";
         }
 
     }
@@ -278,15 +278,15 @@ public partial class MCForm1
         try
         {
             axisID = (uint)Convert.ToUInt16(axesNumText.Text) - 1;
-            if(axisID >= 3 || axisID <= 0)
+            if(axisID > 3 || axisID < 0)
             {
-                MessageBox.Show("axes num invalid");
+                MessageBox.Show("Axes num invalid");
                 return;
             }
         }
         catch
         {
-            MessageBox.Show("axes num invalid");
+            MessageBox.Show("Axes num invalid");
             return;
         }
 

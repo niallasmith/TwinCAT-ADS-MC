@@ -11,15 +11,145 @@ partial class SetupForm1
 
     private void setAxisParams_Click(object sender, EventArgs e)
     {
-        // to do: ensure values are proper
-        uint maxVeloc = Convert.ToUInt16(maxVelocityText.Text);
-        uint maxAccel = Convert.ToUInt16(maxAccelerationText.Text);
-        uint defaultAccel = Convert.ToUInt16(defaultAccelText.Text);
-        uint defaultJerk = Convert.ToUInt16(defaultJerkText.Text);
-        uint homingVeloc = Convert.ToUInt16(homingVelocText.Text);
-        uint manualVelocFast = Convert.ToUInt16(manualVelocFastText.Text);
-        uint manualVelocSlow = Convert.ToUInt16(manualVelocSlowText.Text);
-        uint jogIncrement = Convert.ToUInt16(jogIncrementText.Text);
+        uint maxVeloc;
+        uint maxAccel;
+        uint defaultAccel;
+        uint defaultJerk;
+        uint homingVeloc;
+        uint manualVelocFast;
+        uint manualVelocSlow;
+        uint jogIncrement;
+
+        #region value handling
+
+        if (maxVelocityText.Text == "") 
+        {
+            maxVeloc = Convert.ToUInt16(maxVelocityActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                maxVeloc = Convert.ToUInt16(maxVelocityText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (maxAccelerationText.Text == "") 
+        {
+            maxAccel = Convert.ToUInt16(maxAccelerationActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                maxAccel = Convert.ToUInt16(maxAccelerationText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (defaultAccelText.Text == "") 
+        {
+            defaultAccel = Convert.ToUInt16(defaultAccelActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                defaultAccel = Convert.ToUInt16(defaultAccelText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (defaultJerkText.Text == "") 
+        {
+            defaultJerk = Convert.ToUInt16(defaultJerkActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                defaultJerk = Convert.ToUInt16(defaultJerkText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (homingVelocText.Text == "") 
+        {
+            homingVeloc = Convert.ToUInt16(homingVelocActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                homingVeloc = Convert.ToUInt16(homingVelocText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (manualVelocFastText.Text == "") 
+        {
+            manualVelocFast = Convert.ToUInt16(manualVelocFastActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                manualVelocFast = Convert.ToUInt16(manualVelocFastText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (manualVelocSlowText.Text == "") 
+        {
+            manualVelocSlow = Convert.ToUInt16(manualVelocSlowActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                manualVelocSlow = Convert.ToUInt16(manualVelocSlowText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (jogIncrementText.Text == "") 
+        {
+            jogIncrement = Convert.ToUInt16(jogIncrementActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                jogIncrement = Convert.ToUInt16(jogIncrementText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+        #endregion
 
         object[] vars = {axisID,loopID,maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement};
         ncAxis.WriteAxisParameters(myPLC,vars);
@@ -57,16 +187,77 @@ partial class SetupForm1
 
     private void encoderParamsSetButton_Click(object sender, EventArgs e)
     {
+        double scalingFactorNum;
+        double scalingFactorDen;
+        uint offset;
+        uint mask;
 
-        object[] vars = new object[6];
-        //vars[0] = Convert.ToInt16(encoderInvertedDirectionCheck.Checked);
-        //vars[0] = encoderInvertedDirectionCheck.Checked;
-        vars[0] = axisID;
-        vars[1] = loopID;
-        vars[2] = Convert.ToDouble(encoderScalingNumeratorText.Text);
-        vars[3] = Convert.ToDouble(encoderScalingDenominatorText.Text);
-        vars[4] = Convert.ToInt16(encoderOffsetText.Text);
-        vars[5] = Convert.ToInt32(encoderMaskText.Text);
+        if (encoderScalingNumeratorText.Text == "") 
+        {
+            scalingFactorNum = Convert.ToDouble(encoderScalingNumeratorReadText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                scalingFactorNum = Convert.ToDouble(encoderScalingNumeratorText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (encoderScalingDenominatorText.Text == "") 
+        {
+            scalingFactorDen = Convert.ToDouble(encoderScalingDenominatorReadText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                scalingFactorDen = Convert.ToDouble(encoderScalingDenominatorText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (encoderOffsetText.Text == "") 
+        {
+            offset = Convert.ToUInt32(encoderOffsetReadText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                offset = Convert.ToUInt32(encoderOffsetText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        if (encoderMaskText.Text == "") 
+        {
+            mask = Convert.ToUInt32(encoderMaskReadText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                mask = Convert.ToUInt32(encoderMaskText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        object[] vars = {axisID,loopID,scalingFactorNum,scalingFactorDen,offset,mask};
+
         ncAxis.SetEncoderParams(myPLC,vars);
     }
 

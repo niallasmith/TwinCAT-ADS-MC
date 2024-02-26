@@ -137,7 +137,6 @@ public class NCAxis
     {
         object[] varsin = {axisID,loopID};
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadAxisParameters", varsin, out object[] vars);
-        //plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadAxisParameters", null, out object[] vars);
         return vars;
     }
 
