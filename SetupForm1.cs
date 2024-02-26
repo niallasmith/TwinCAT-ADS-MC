@@ -9,13 +9,13 @@ public partial class SetupForm1 : Form
     
     public PLC myPLC;
     public NCAxis ncAxis;
-    public uint axesNum;
+    public uint axisID;
     public uint loopID = 0;
-    public SetupForm1(PLC PLC, NCAxis NCAxis, uint AXESNum)
+    public SetupForm1(PLC myPLCIn, NCAxis ncAxisIn, uint axisIDIn)
     {
-        myPLC = PLC;
-        ncAxis = NCAxis;
-        axesNum = AXESNum;
+        myPLC = myPLCIn;
+        ncAxis = ncAxisIn;
+        axisID = axisIDIn;
         SetupInitializeComponent();
     }
 

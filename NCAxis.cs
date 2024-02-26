@@ -23,12 +23,12 @@ public class NCAxis
         set { _axisID = value; }
     }
 
-    public NCAxis(PLC plc, ushort axisID)  // NCAxis constructor
+    public NCAxis(PLC plc, uint axisID)  // NCAxis constructor
     {
         UpdateAxisInstance(plc, axisID);
     }
 
-    public void UpdateAxisInstance(PLC plc, ushort axisID) // create variable handles
+    public void UpdateAxisInstance(PLC plc, uint axisID) // create variable handles
     {
         try
         {
@@ -111,56 +111,52 @@ public class NCAxis
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteAxisParameters", vars);
     }
 
-    public object ReadAxisParameters(PLC plc, uint loopID)
+    public object ReadAxisParameters(PLC plc, uint axisID, uint loopID)
     {
-        object[] varsin = {loopID};
+        object[] varsin = {axisID,loopID};
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadAxisParameters", varsin, out object[] vars);
         //plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadAxisParameters", null, out object[] vars);
         return vars;
     }
+
+    /*
     public uint ReadActiveEncoder(PLC plc)
     {
         object[] varsin = new object[1];
         varsin[0] = 0;
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadActiveEncoder",varsin,out object[] vars);
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadActiveEncoder", varsin, out object[] vars);
         uint val = (uint)vars[0];
         System.Console.WriteLine(val);
         return val;
     }
-    public void SetActiveEncoder(PLC plc, uint loopID)
+    */
+    public void SetActiveEncoder(PLC plc, uint axisID, uint loopID)
     {
-        object[] vars = new object[1];
-        vars[0] = loopID;
-        //vars[1] = encoderID;
+        object[] vars = {axisID, loopID};
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_SetActiveEncoder", vars);
     }
 
-    public void MoveAbsolute(PLC plc, uint position, uint velocity, uint loopID)
+    public void MoveAbsolute(PLC plc, uint axisID, uint loopID, uint position, uint velocity)
     {
-        object[] vars = new object[2];
-        vars[0] = position;
-        vars[1] = velocity;
-        vars[2] = loopID;
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",null);
+        object[] varsEnable = {axisID,loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",varsEnable);
+        object[] vars = {axisID,loopID,position,velocity};
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveAbsolute",vars);
     }
 
-    public void MoveRelative(PLC plc, uint position, uint velocity, uint loopID)
+    public void MoveRelative(PLC plc, uint axisID, uint loopID, uint position, uint velocity)
     {
-        object[] vars = new object[2];
-        vars[0] = position;
-        vars[1] = velocity;
-        vars[2] = loopID;
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",null);
+        object[] varsEnable = {axisID,loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",varsEnable);
+        object[] vars = {axisID,loopID,position,velocity};
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveRelative",vars);
     }
 
-    public object[] ReadEncoderParams(PLC plc,uint loopID)
+    public object[] ReadEncoderParams(PLC plc, uint axisID, uint loopID)
     {
         object[] vars = new object[5];
-        object[] loopIDobj = {loopID};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadEncoderParameters", loopIDobj,out vars);
-        //plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadEncoderParameters", null,out vars);
+        object[] varsin = {axisID, loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadEncoderParameters", varsin, out vars);
         return vars;
     }
 
@@ -169,10 +165,11 @@ public class NCAxis
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteEncoderParameters", vars);
     }
 
-    public object[] ReadActiveLoop(PLC plc)
+    public object[] ReadActiveLoop(PLC plc, uint axisID)
     {
         object[] vars = new object[1];
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadActiveLoop", null, out vars);
+        object[] varsin = {axisID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadActiveLoop", varsin, out vars);
         return vars;
     }
 

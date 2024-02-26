@@ -4,7 +4,8 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	nState: UINT := 0;
-	Axis1 : ARRAY [0..2] OF AXIS_REF;
+	//Axis1 : ARRAY [0..2] OF AXIS_REF;
+	Axis : ARRAY [0..3] OF ARRAY [0..1] OF AXIS_REF;
 	//Axis1 : AXIS_REF;
 	//Axis1B : AXIS_REF;
 	MoveAbsolute : MC_MoveAbsolute;
@@ -22,10 +23,22 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Axis1[0]();
-Axis1[1]();
+      <ST><![CDATA[//Axis1[0]();
+//Axis1[1]();
 //Axis1[2]();
 //Axis1();
+
+Axis[0][0](); // incremental encoder axis 1
+Axis[0][1](); // absolute encoder axis 1
+
+Axis[1][0](); // incremental encoder axis 2
+Axis[1][1](); // absolute encoder axis 2
+
+Axis[2][0](); // incremental encoder axis 3
+Axis[2][1](); // absolute encoder axis 3
+
+Axis[3][0](); // incremental encoder axis 4
+Axis[3][1](); // absolute encoder axis 4
 
 
 //E_NcEncoderType.NcEncoderType_Simulation
@@ -73,6 +86,16 @@ Axis1[1]();
       <LineId Id="81" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="135" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="159" Count="1" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="161" Count="1" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="167" Count="0" />
       <LineId Id="115" Count="0" />
       <LineId Id="77" Count="0" />
       <LineId Id="76" Count="0" />

@@ -26,7 +26,7 @@ partial class SetupForm1
         uint jogIncrement = Convert.ToUInt16(jogIncrementText.Text);
 
         //object[] vars = {maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement,loopID};
-        object[] vars = {maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement};
+        object[] vars = {axisID,loopID,maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement};
         ncAxis.WriteAxisParameters(myPLC,vars);
     }
 
@@ -40,25 +40,22 @@ partial class SetupForm1
 
         object[] vars = new object[8];
 
-        vars = (object[])ncAxis.ReadAxisParameters(myPLC,loopID);
-        //vars = (object[])ncAxis.ReadAxisParameters(myPLC,0);
-
-        //System.Console.WriteLine(vars[0]);
-        
-        //readPosValue = ncAxis.ReadPosition(myPLC);
-        //readVelValue = ncAxis.ReadVelocity(myPLC);
-        //readAcclValue = ncAxis.ReadAcceleration(myPLC);
+        vars = (object[])ncAxis.ReadAxisParameters(myPLC, axisID, loopID);
         RefreshAxisData(vars);
         object[] encoderVars = new object[5];
-        encoderVars = (object[])ncAxis.ReadEncoderParams(myPLC,loopID);
-        //encoderVars = (object[])ncAxis.ReadEncoderParams(myPLC,0);
+        encoderVars = (object[])ncAxis.ReadEncoderParams(myPLC, axisID, loopID);
         RefreshEncoderData(encoderVars);
     }
 
+    /*
     private void encoderReadButton_Click(object sender, EventArgs e)
     {
         ncAxis.ReadActiveEncoder(myPLC);
     }
+
+    */
+
+    /*
 
     private void encoderSetButton_Click(object sender, EventArgs e)
     {
@@ -73,6 +70,8 @@ partial class SetupForm1
         
     }
 
+    */
+
     //private void callMoveAbsoluteButton_Click(object sender, EventArgs e)
     //{
     //    ncAxis.CallMoveAbsolute(myPLC,loopID);
@@ -83,37 +82,33 @@ partial class SetupForm1
         if(controlLoop1Radio.Checked)
         {
             loopID = 0;
-            ncAxis.SetActiveEncoder(myPLC, loopID);
+            ncAxis.SetActiveEncoder(myPLC, axisID, loopID);
         } 
         if(controlLoop2Radio.Checked) 
         {
             loopID = 1;
-            ncAxis.SetActiveEncoder(myPLC, loopID);
+            ncAxis.SetActiveEncoder(myPLC, axisID, loopID);
         }
     }
 
     private void encoderParamsSetButton_Click(object sender, EventArgs e)
     {
-        //invertEncoderDirection : BOOL;
-	    //scalingFactorNumerator : UINT;
-	    //scalingFactorDenominator : UINT;
-	    //encoderOffset : UINT;
-	    //encoderMask : UINT;
-	    //controlLoopID : UINT;
-        object[] vars = new object[4];
+
+        object[] vars = new object[6];
         //vars[0] = Convert.ToInt16(encoderInvertedDirectionCheck.Checked);
         //vars[0] = encoderInvertedDirectionCheck.Checked;
-        vars[0] = Convert.ToDouble(encoderScalingNumeratorText.Text);
-        vars[1] = Convert.ToDouble(encoderScalingDenominatorText.Text);
-        vars[2] = Convert.ToInt16(encoderOffsetText.Text);
-        vars[3] = Convert.ToInt32(encoderMaskText.Text);
-        vars[4] = loopID;
+        vars[0] = axisID;
+        vars[1] = loopID;
+        vars[2] = Convert.ToDouble(encoderScalingNumeratorText.Text);
+        vars[3] = Convert.ToDouble(encoderScalingDenominatorText.Text);
+        vars[4] = Convert.ToInt16(encoderOffsetText.Text);
+        vars[5] = Convert.ToInt32(encoderMaskText.Text);
         ncAxis.SetEncoderParams(myPLC,vars);
     }
 
     private void getCurrentLoopID()
     {
-        UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC)[0];
+        UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC,axisID)[0];
 
         if (activeLoopID == 1)
         {

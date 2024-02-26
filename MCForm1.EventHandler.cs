@@ -14,7 +14,7 @@ public partial class MCForm1
     public int Port;
     public ushort readVelValue;
     public ushort readAcclValue;
-    public ushort axesNum = 1;
+    public uint axisID = 1;
     public SetupForm1 SetupForm;
     //public Program myPlc;
     private void connectButton_Click(object sender, EventArgs e) // initialise button pressed
@@ -168,7 +168,7 @@ public partial class MCForm1
     {
         //Application.Run(SetupForm1);
         //SetupForm1 SetupForm1
-        SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axesNum);
+        SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axisID);
         SetupForm.ShowDialog();
     }
 
@@ -215,15 +215,15 @@ public partial class MCForm1
         }
         */
 
-        UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC)[0];
+        //UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC)[0];
 
         if (moveAbsoluteRadio.Checked)
         {
-            ncAxis.MoveAbsolute(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
+            //ncAxis.MoveAbsolute(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
         } 
         else if (moveRelativeRadio.Checked) 
         {
-            ncAxis.MoveRelative(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
+            //ncAxis.MoveRelative(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
         }
         else
         {
@@ -294,8 +294,8 @@ public partial class MCForm1
     {
         try
         {
-            axesNum = Convert.ToUInt16(axesNumText.Text);
-            ncAxis = new NCAxis(myPLC, axesNum);
+            axisID = Convert.ToUInt16(axesNumText.Text);
+            ncAxis = new NCAxis(myPLC, axisID);
             axisConnectedLabel.Text = "Connected";
         }
         catch
