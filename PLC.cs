@@ -51,7 +51,6 @@ public class PLC
             catch
             {
                 System.Console.WriteLine("PLC did not connect");
-                //Do Nothing - Usually means invalid AMS NET ID format
             }      
     }
     

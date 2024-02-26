@@ -9,6 +9,7 @@ public partial class SetupForm1 : Form
     
     public PLC myPLC;
     public NCAxis ncAxis;
+    
     public uint axisID;
     public uint loopID = 0;
     public SetupForm1(PLC myPLCIn, NCAxis ncAxisIn, uint axisIDIn)

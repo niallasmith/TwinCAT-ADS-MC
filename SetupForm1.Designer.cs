@@ -33,6 +33,7 @@ partial class SetupForm1
     public TextBox jogIncrementText;
     public TextBox jogIncrementActualText;
     public Label jogIncrementLabel;
+    public Button setAxisParamsButton;
 
     #endregion
 
@@ -41,23 +42,27 @@ partial class SetupForm1
     public Label encoderParamsLabel;
     public Label encoderParamsSetLabel;
     public Label encoderParamsReadLabel;
+    public RadioButton controlLoop1Radio;
+    public RadioButton controlLoop2Radio;
+    public Label controlLoop1Label;
+    public Label controlLoop2Label;
     public CheckBox encoderInvertedDirectionCheck;
     public TextBox encoderScalingNumeratorText;
     public TextBox encoderScalingDenominatorText;
     public TextBox encoderOffsetText;
     public TextBox encoderMaskText;
-    public Button encoderParamsSetButton;
+    
     public Label encoderInvertedDirectionLabel;
     public Label encoderScalingNumeratorLabel;
     public Label encoderScalingDenominatorLabel;
     public Label encoderOffsetLabel;
     public Label encoderMaskLabel;
-
     public TextBox encoderInvertedDirectionReadText;
     public TextBox encoderScalingNumeratorReadText;
     public TextBox encoderScalingDenominatorReadText;
     public TextBox encoderOffsetReadText;
     public TextBox encoderMaskReadText;
+    public Button encoderParamsSetButton;
 
     #endregion
 
@@ -76,21 +81,6 @@ partial class SetupForm1
     public TextBox controllerMode;
     #endregion
 
-    public RadioButton incrementalEncoderRadio;
-    public Button encoderReadButton;
-    public Button encoderSetButton;
-    public TextBox encoderSetText;
-    public TextBox axisSetText;
-    public Button callMoveAbsoluteButton;
-    public RadioButton absoluteEncoderRadio;
-    public RadioButton openLoopControlRadio;
-
-    public RadioButton controlLoop1Radio;
-    public RadioButton controlLoop2Radio;
-    public Label controlLoop1Label;
-    public Label controlLoop2Label;
-
-    public Button setAxisParamsButton;
 
     protected override void Dispose(bool disposing)
     {
@@ -147,7 +137,11 @@ partial class SetupForm1
         //axisParamsActualLabel.Font = new Font(FontFamily.GenericSansSerif, 16.0F, FontStyle.Bold);
         this.Controls.Add(axisParamsActualLabel);
 
-        #region max velocity
+        #region axis set
+
+        #endregion
+
+        #region axis read
 
         maxVelocityLabel = new Label();
         maxVelocityLabel.Size = new Size(100,20);
@@ -335,37 +329,6 @@ partial class SetupForm1
 
         #region encoder parameters
 
-        //encoderReadButton = new Button();
-        //encoderReadButton.Size = new Size(75,40);
-        //encoderReadButton.Location = new Point(300,20);
-        //encoderReadButton.Text = "encoder read";
-        //this.Controls.Add(encoderReadButton);
-        //encoderReadButton.Click += new EventHandler(encoderReadButton_Click);
-
-        //encoderSetButton = new Button();
-        //encoderSetButton.Size = new Size(75,40);
-        //encoderSetButton.Location = new Point(400,100);
-        //encoderSetButton.Text = "encoder set";
-        //this.Controls.Add(encoderSetButton);
-        //encoderSetButton.Click += new EventHandler(encoderSetButton_Click);
-
-        //axisSetText = new TextBox();
-        //axisSetText.Size = new Size(60,20);
-        //axisSetText.Location = new Point(400,20);
-        //this.Controls.Add(axisSetText);
-
-        //public CheckBox encoderInvertedDirectionCheck;
-        //public TextBox encoderScalingNumeratorText;
-        //public TextBox encoderScalingDenominatorText;
-        //public TextBox encoderOffsetText;
-        //public TextBox encoderMaskText;
-        //encoderParamsSetButton
-        //public Label encoderInvertedDirectionLabel;
-        //public Label encoderScalingNumeratorLabel;
-        //public Label encoderScalingDenominatorLabel;
-        //public Label encoderOffsetLabel;
-        //public Label encoderMaskLabel;
-
         encoderParamsLabel = new Label();
         encoderParamsLabel.Size = new Size(250,30);
         encoderParamsLabel.Location = new Point(300,20);
@@ -385,6 +348,8 @@ partial class SetupForm1
         encoderParamsReadLabel.Text = "Actual";
         this.Controls.Add(encoderParamsReadLabel);
 
+        #region encoder selection radio buttons
+
         controlLoop1Radio = new RadioButton();
         controlLoop1Radio.Size = new Size(20,20);
         controlLoop1Radio.Location = new Point(320,60);
@@ -395,7 +360,6 @@ partial class SetupForm1
         controlLoop1Label.Size = new Size(100,20);
         controlLoop1Label.Location = new Point(345,60);
         controlLoop1Label.Text = "Control loop 1";
-        //axisParamsLabel.Font = new Font(FontFamily.GenericSansSerif, 16.0F, FontStyle.Bold);
         this.Controls.Add(controlLoop1Label);
 
         controlLoop2Radio = new RadioButton();
@@ -408,13 +372,11 @@ partial class SetupForm1
         controlLoop2Label.Size = new Size(100,20);
         controlLoop2Label.Location = new Point(345,80);
         controlLoop2Label.Text = "Control loop 2";
-        //axisParamsLabel.Font = new Font(FontFamily.GenericSansSerif, 16.0F, FontStyle.Bold);
         this.Controls.Add(controlLoop2Label);
 
         getCurrentLoopID();
 
-        
-
+        #endregion
 
         #region encoder set 
 
@@ -520,23 +482,10 @@ partial class SetupForm1
         this.Controls.Add(encoderMaskReadText);
 
         #endregion
-        
-
-        //callMoveAbsoluteButton = new Button();
-        //callMoveAbsoluteButton.Size = new Size(100,60);
-        //callMoveAbsoluteButton.Location = new Point(400,100);
-        //callMoveAbsoluteButton.Text = "Call Move Absolute";
-        //this.Controls.Add(callMoveAbsoluteButton);
-        //callMoveAbsoluteButton.Click += new EventHandler(callMoveAbsoluteButton_Click);
-
-        //encoderSetText = new TextBox();
-        //encoderSetText.Size = new Size(60,20);
-        //encoderSetText.Location = new Point(400,50);
-        //this.Controls.Add(encoderSetText);
 
         #endregion
 
-        #region drive params
+        #region drive parameters
 
         driveParamsLabel = new Label();
         driveParamsLabel.Size = new Size(250,30);
@@ -557,10 +506,17 @@ partial class SetupForm1
         driveParamsReadLabel.Text = "Actual";
         this.Controls.Add(driveParamsReadLabel);
 
+        #region drive set
 
         #endregion
 
-        #region controller params
+        #region drive read
+
+        #endregion
+
+        #endregion
+
+        #region controller parameters
 
         controllerParamsLabel = new Label();
         controllerParamsLabel.Size = new Size(250,30);
@@ -581,9 +537,16 @@ partial class SetupForm1
         controllerParamsReadLabel.Text = "Actual";
         this.Controls.Add(controllerParamsReadLabel);
 
+        #region controller set
+
+        #endregion
+
+        #region controller read
+
+        #endregion
+
         #endregion
         
-        // setup form design
         CenterToScreen();
     }
 

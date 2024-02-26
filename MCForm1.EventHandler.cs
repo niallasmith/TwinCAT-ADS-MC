@@ -9,17 +9,20 @@ public partial class MCForm1
 {
     public PLC myPLC;
     public NCAxis ncAxis;
-    public ushort readPosValue;
+
+    
     public string AMSID;
     public int Port;
+
+    public uint axisID = 0;
+
+    public ushort readPosValue;
     public ushort readVelValue;
-    public ushort readAcclValue;
-    public uint axisID = 1;
+    
     public SetupForm1 SetupForm;
-    //public Program myPlc;
+
     private void connectButton_Click(object sender, EventArgs e) // initialise button pressed
     {
-        //MessageBox.Show("Initialise button event handler");
 
         if (localCheckBox.Checked)
         {
@@ -62,7 +65,6 @@ public partial class MCForm1
             plcConnectedLabel.Text = "Disonnected";
         }
         
-        //ncAxis = new NCAxis(myPLC, axesNum);
     }
 
     /*
@@ -141,57 +143,47 @@ public partial class MCForm1
     {
         if (ncAxis is null)
         {
-            //MessageBox.Show("ncAxis is null, ensure initialistion");
             return;
         }
         
-        //object vars = ncAxis.ReadAxisParameters(myPLC);
+        //object[] vars = ncAxis.ReadAxisParameters(myPLC);
         readPosText.Text = Convert.ToString(readPosValue);
         readVelText.Text = Convert.ToString(readVelValue);
-        //readAcclText.Text = Convert.ToString(readAcclValue);
     }
 
     private void localCheckBox_Click(object sender, EventArgs e) // check box clicked
     {
         if (localCheckBox.Checked)
         {
-            //MessageBox.Show("checked");
             userAMSIDText.ReadOnly = true;
 
         } else {
-            //MessageBox.Show("unchecked");
             userAMSIDText.ReadOnly = false;
         }
     }
 
-    private void axesSetupButton_Click(object sender, EventArgs e) // initialise button pressed
+    private void axesSetupButton_Click(object sender, EventArgs e) 
     {
-        //Application.Run(SetupForm1);
-        //SetupForm1 SetupForm1
         SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axisID);
         SetupForm.ShowDialog();
     }
-
 
     private void moveAbsoluteRadio_Click(object sender, EventArgs e)
     {
         setPosText.ReadOnly = false;
         setVelText.ReadOnly = false;
-        //setAcclText.ReadOnly = false;
     } 
 
     private void moveRelativeRadio_Click(object sender, EventArgs e)
     {
         setPosText.ReadOnly = false;
         setVelText.ReadOnly = false;
-        //setAcclText.ReadOnly = false;
     } 
 
     private void moveHomeRadio_Click(object sender, EventArgs e)
     {
         setPosText.ReadOnly = true;
         setVelText.ReadOnly = false;
-        //setAcclText.ReadOnly = false;
     } 
 
     private void executeButton_Click(object sender, EventArgs e)
@@ -215,15 +207,15 @@ public partial class MCForm1
         }
         */
 
-        //UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC)[0];
+        UInt16 loopID = (UInt16)ncAxis.ReadActiveLoop(myPLC,axisID)[0];
 
         if (moveAbsoluteRadio.Checked)
         {
-            //ncAxis.MoveAbsolute(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
+            ncAxis.MoveAbsolute(myPLC, axisID, loopID, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text));
         } 
         else if (moveRelativeRadio.Checked) 
         {
-            //ncAxis.MoveRelative(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
+            ncAxis.MoveRelative(myPLC, axisID, loopID, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text));
         }
         else
         {
@@ -231,15 +223,6 @@ public partial class MCForm1
             setVelText.Text = "error";
         }
 
-        //if (setAcclText.Text!="")
-        //{
-        //    WriteAcceleration();
-        //}
-
-        setPosText.Text = "";
-        setVelText.Text = "";
-        //setAcclText.Text = "";
-        //WriteExecute();
     }
 
     /*
@@ -294,13 +277,28 @@ public partial class MCForm1
     {
         try
         {
-            axisID = Convert.ToUInt16(axesNumText.Text);
+            axisID = (uint)Convert.ToUInt16(axesNumText.Text) - 1;
+            if(axisID >= 3 || axisID <= 0)
+            {
+                MessageBox.Show("axes num invalid");
+                return;
+            }
+        }
+        catch
+        {
+            MessageBox.Show("axes num invalid");
+            return;
+        }
+
+        try
+        {
             ncAxis = new NCAxis(myPLC, axisID);
             axisConnectedLabel.Text = "Connected";
         }
         catch
         {
-            MessageBox.Show("axes num invalid");
+            MessageBox.Show("Axis not connected");
+            axisConnectedLabel.Text = "Disconnected";
             axesNumText.Text = "1";
             return;
         }
@@ -308,7 +306,7 @@ public partial class MCForm1
 
     private void SetupForm1_Closed(object sender, EventArgs e)
     {
-        // push changes to NC axis (put setup bool variable true?)
+        // push changes to NC axis 
         System.Console.WriteLine("form closed");
     }
 }

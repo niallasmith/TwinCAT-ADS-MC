@@ -12,22 +12,16 @@ partial class MCForm1
     public TextBox axesNumText;
     public Button axisConnectButton;
     public Button axesSetupButton;
-    //public Button newSetPos;
-    //public Button newVelCmd;
+
     public TextBox setPosText;
     public TextBox readPosText;
     public TextBox setVelText;
     public TextBox readVelText;
-    //public TextBox setAcclText;
-    //public TextBox readAcclText;
     public Label velocityLabel;
-    //public Label accelerationLabel;
     public Label positionLabel;
     public Label setLabel;
     public Label readLabel;
     public Button executeButton;
-    //public CheckBox checkBOX;
-    //public Label checkBoxText;
     public Label amsLabel;
     public Label localAMSLabel;
     public Label portLabel;
@@ -39,9 +33,8 @@ partial class MCForm1
     public Label moveHomeLabel;
     public Label plcConnectedLabel;
     public Label axisConnectedLabel;
-    /// <summary>
-    ///  Required designer variable.
-    /// </summary>
+
+
     private System.ComponentModel.IContainer components = null;
 
     /// <summary>
@@ -143,8 +136,6 @@ partial class MCForm1
         axesNumText.Size = new Size(50,30);
         axesNumText.Location = new Point(150,110);
         axesNumText.Font = new Font(FontFamily.GenericSansSerif, 16.0F, FontStyle.Bold);
-        //axesNumText.Leave += new EventHandler(axesNumText_Leave);
-        //axesNumText.MouseLeave += new EventHandler(axesNumText_Leave);
         axesNumText.Text = "1";
         this.Controls.Add(axesNumText);
 
@@ -276,18 +267,6 @@ partial class MCForm1
 
         #endregion
 
-        //checkBOX = new CheckBox(); // checkbox
-        //checkBOX.Size = new Size(20,20);
-        //checkBOX.Location = new Point(180,250);
-        //this.Controls.Add(checkBOX);
-        //checkBOX.Click += new EventHandler(checkBox_Click);
-
-        //checkBoxText = new Label();
-        //checkBoxText.Size = new Size(120,60);
-        //checkBoxText.Location = new Point(25,250);
-        //checkBoxText.Text = "Checkbox value 3";
-        //this.Controls.Add(checkBoxText);
-
         #region Execute button
 
         executeButton = new Button();
@@ -299,7 +278,7 @@ partial class MCForm1
 
         #endregion
 
-        #region radio buttons
+        #region move command type radio buttons
 
         moveAbsoluteRadio = new RadioButton();
         moveAbsoluteRadio.Size = new Size(20,20);
@@ -359,7 +338,5 @@ partial class MCForm1
         #endregion
 
         CenterToScreen();
-
-        //SetupForm1.FormClosed += new FormClosedEventHandler(SetupForm1_Closed);
     }
 }

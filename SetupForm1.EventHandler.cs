@@ -6,15 +6,11 @@ using TwinCAT.Ads.TypeSystem;
 
 namespace TwinCAT_ADS_MC;
 
-//partial class MCForm1
-//{
-
 partial class SetupForm1
 {
 
     private void setAxisParams_Click(object sender, EventArgs e)
     {
-
         // to do: ensure values are proper
         uint maxVeloc = Convert.ToUInt16(maxVelocityText.Text);
         uint maxAccel = Convert.ToUInt16(maxAccelerationText.Text);
@@ -25,7 +21,6 @@ partial class SetupForm1
         uint manualVelocSlow = Convert.ToUInt16(manualVelocSlowText.Text);
         uint jogIncrement = Convert.ToUInt16(jogIncrementText.Text);
 
-        //object[] vars = {maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement,loopID};
         object[] vars = {axisID,loopID,maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement};
         ncAxis.WriteAxisParameters(myPLC,vars);
     }
@@ -34,7 +29,6 @@ partial class SetupForm1
     {
         if (ncAxis is null)
         {
-            //MessageBox.Show("ncAxis is null, ensure initialistion");
             return;
         }
 
@@ -47,47 +41,17 @@ partial class SetupForm1
         RefreshEncoderData(encoderVars);
     }
 
-    /*
-    private void encoderReadButton_Click(object sender, EventArgs e)
-    {
-        ncAxis.ReadActiveEncoder(myPLC);
-    }
-
-    */
-
-    /*
-
-    private void encoderSetButton_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            ncAxis.SetActiveEncoder(myPLC, Convert.ToUInt16(axisSetText.Text));
-        }
-        catch
-        {
-            System.Console.WriteLine("error in SetActiveEncoder or in converting axisSetText");
-        }
-        
-    }
-
-    */
-
-    //private void callMoveAbsoluteButton_Click(object sender, EventArgs e)
-    //{
-    //    ncAxis.CallMoveAbsolute(myPLC,loopID);
-    //}
-
     private void controlLoopRadio_Click(object sender, EventArgs e)
     {
         if(controlLoop1Radio.Checked)
         {
             loopID = 0;
-            ncAxis.SetActiveEncoder(myPLC, axisID, loopID);
+            ncAxis.SetActiveControlLoop(myPLC, axisID, loopID);
         } 
         if(controlLoop2Radio.Checked) 
         {
             loopID = 1;
-            ncAxis.SetActiveEncoder(myPLC, axisID, loopID);
+            ncAxis.SetActiveControlLoop(myPLC, axisID, loopID);
         }
     }
 
@@ -120,4 +84,3 @@ partial class SetupForm1
     }
 
 }
-//}
