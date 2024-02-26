@@ -1,0 +1,843 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Functions" Id="{87e7f3b9-d9e3-4e1a-ad5e-3d4326ef9e7d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Functions
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_EnableAxis" Id="{a241beb0-66b2-4f66-a177-89d82c51ec16}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_EnableAxis : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Main.AxisPower(Axis:=Main.Axis1[0],Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); 
+Main.AxisPower(Axis:=Main.Axis1[1],Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); 
+
+//Main.AxisPower(Axis:=Main.Axis1,Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_MoveAbsolute" Id="{21c8d92b-8bc3-49df-8463-a5f13171cc19}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_MoveAbsolute : BOOL
+VAR_INPUT
+	position : UINT;
+	velocity : UINT;
+	controlLoopID : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); 
+
+WHILE Main.Axis1[controlLoopID].Status.Operational = FALSE DO
+	Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+Main.Reset(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+
+//WHILE Main.Axis1[controlLoopID].Status.ControlLoopClosed = FALSE DO
+//	
+//END_WHILE
+			
+Main.MoveAbsolute(Axis:=main.Axis1[controlLoopID],
+					Position:=position,
+					Velocity:=velocity);
+					
+Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+
+Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+//Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+//Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+//Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+
+//Main.AxisPower(Axis:=Main.Axis1,Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); 
+
+//WHILE Main.Axis1.Status.Operational = FALSE DO
+//	Main.MoveAbsolute(Axis:=Main.Axis1,Execute:=FALSE);
+//END_WHILE
+
+//Main.MoveAbsolute(Axis:=Main.Axis1,Execute:=FALSE);
+//Main.Reset(Axis:=Main.Axis1,Execute:=FALSE);
+
+////WHILE Main.Axis1[controlLoopID].Status.ControlLoopClosed = FALSE DO
+////	
+////END_WHILE
+			
+//Main.MoveAbsolute(Axis:=main.Axis1,Position:=position,Velocity:=velocity);
+					
+//Main.MoveAbsolute(Axis:=Main.Axis1,Execute:=TRUE);
+
+//Main.MoveAbsolute(Axis:=Main.Axis1,Execute:=FALSE);
+////Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+////Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+////Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_MoveRelative" Id="{49a2a512-3e94-4879-b314-10353ec76639}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_MoveRelative : BOOL
+VAR_INPUT
+	position : UINT;
+	velocity : UINT;
+	controlLoopID : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); 
+
+WHILE Main.Axis1[controlLoopID].Status.Operational = FALSE DO
+	Main.MoveRelative(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+Main.MoveRelative(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+Main.Reset(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+
+//WHILE Main.Axis1[controlLoopID].Status.ControlLoopClosed = FALSE DO
+//	
+//END_WHILE
+			
+Main.MoveRelative(Axis:=Main.Axis1[controlLoopID],Distance:=position,Velocity:=velocity);
+					
+Main.MoveRelative(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+
+Main.MoveRelative(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+//Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+//Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+//Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+
+//Main.AxisPower(Axis:=Main.Axis1,Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); 
+
+//WHILE Main.Axis1.Status.Operational = FALSE DO
+//	Main.MoveRelative(Axis:=Main.Axis1,Execute:=FALSE);
+//END_WHILE
+
+//Main.MoveRelative(Axis:=Main.Axis1,Execute:=FALSE);
+//Main.Reset(Axis:=Main.Axis1,Execute:=FALSE);
+
+////WHILE Main.Axis1[controlLoopID].Status.ControlLoopClosed = FALSE DO
+////	
+////END_WHILE
+			
+//Main.MoveRelative(Axis:=Main.Axis1,Distance:=position,Velocity:=velocity);
+					
+//Main.MoveRelative(Axis:=Main.Axis1,Execute:=TRUE);
+
+//Main.MoveRelative(Axis:=Main.Axis1,Execute:=FALSE);
+////Main.MoveAbsolute(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+////Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+////Main.AxisPower(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE,Enable_Positive:=FALSE,Enable_Negative:=FALSE);
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ReadActiveEncoder" Id="{265af1fa-61d1-4cca-ad3e-63dfc1e281d9}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_ReadActiveEncoder : DWORD
+VAR_INPUT
+	axisControlLoop : UINT;
+END_VAR
+VAR_OUTPUT
+	EncoderID : DWORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Main.ReadDriveAddress(Axis:=Main.Axis1[axisControlLoop],Execute:=FALSE);
+Main.ReadDriveAddress(Axis:=Main.Axis1[axisControlLoop],Execute:=TRUE);
+
+WHILE (Main.ReadDriveAddress.Busy) DO
+	Main.ReadDriveAddress(Axis:=Main.Axis1[axisControlLoop],Execute:=FALSE);
+END_WHILE
+
+//Main.ReadDriveAddress(Axis:=Main.Axis1[1], ST_DriveAddress.NcEncoderId => EncoderID);
+//.DriveAddress.NcEncoderId;
+EncoderID := Main.ReadDriveAddress.DriveAddress.NcEncoderID;
+
+//Main.ReadDriveAddress(Axis:=Main.Axis1,Execute:=FALSE);
+//Main.ReadDriveAddress(Axis:=Main.Axis1,Execute:=TRUE);
+
+//WHILE (Main.ReadDriveAddress.Busy) DO
+//	Main.ReadDriveAddress(Axis:=Main.Axis1,Execute:=FALSE);
+//END_WHILE
+
+////Main.ReadDriveAddress(Axis:=Main.Axis1, ST_DriveAddress.NcEncoderId => EncoderID);
+////////.DriveAddress.NcEncoderId;
+//EncoderID := Main.ReadDriveAddress.DriveAddress.NcEncoderID;
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ReadActiveLoop" Id="{e51264ef-8758-4e07-9f48-0556be0a0f46}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_ReadActiveLoop : UINT
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	loopID : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[loopID := Main.Axis1[1].NcToPlc.ActiveControlLoopIndex;
+//loopID := Main.Axis1.NcToPlc.ActiveControlLoopIndex;
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ReadAxisParameters" Id="{b4b35217-25df-4f47-ab66-df6486a56b0b}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_ReadAxisParameters : LREAL
+VAR_INPUT
+	controlLoopID : UINT;
+END_VAR
+VAR_OUTPUT
+	maxVelocity : LREAL;
+	maxAcceleration : LREAL;
+	defaultAcceleration : LREAL;
+	defaultJerk : LREAL;
+	homingVelocity : LREAL;
+	manualVelocityFast : LREAL;
+	manualVelocitySlow : LREAL;
+	jogIncrement : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Axis Max Velocity
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisMaxVelocity);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+maxVelocity := Main.ReadParameter.Value;
+
+
+// Axis Max Acceleration
+//maxAcceleration := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisMaximumAcceleration);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisMaximumAcceleration);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+maxAcceleration := Main.ReadParameter.Value;
+
+
+//Axis Default Acceleration
+//defaultAcceleration := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisAcc);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisAcc);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+defaultAcceleration := Main.ReadParameter.Value;
+
+
+//Axis Default Jerk
+//defaultJerk := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisJerk);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisJerk);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+defaultJerk := Main.ReadParameter.Value;
+
+
+//Axis Homing Velocity +ve direction
+//homingVelocity := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisCalibrationVelocityForward);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisCalibrationVelocityForward);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+homingVelocity := Main.ReadParameter.Value;
+
+
+//Axis Manual Velocity (Fast)
+//manualVelocityFast := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisManualVelocityFast);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisManualVelocityFast);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+manualVelocityFast := Main.ReadParameter.Value;
+
+
+//Axis Manual Velocity (Slow)
+//manualVelocitySlow := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisManualVelocitySlow);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisManualVelocitySlow);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+manualVelocitySlow := Main.ReadParameter.Value;
+
+
+//Axis Jog Increment +ve Direction
+//jogIncrement := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisJogIncrementForward);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisJogIncrementForward);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+jogIncrement := Main.ReadParameter.Value;
+
+//// Axis Max Velocity
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisMaxVelocity);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//maxVelocity := Main.ReadParameter.Value;
+
+
+//// Axis Max Acceleration
+////maxAcceleration := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisMaximumAcceleration);
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisMaximumAcceleration);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//maxAcceleration := Main.ReadParameter.Value;
+
+
+////Axis Default Acceleration
+////defaultAcceleration := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisAcc);
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisAcc);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//defaultAcceleration := Main.ReadParameter.Value;
+
+
+////Axis Default Jerk
+////defaultJerk := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisJerk);
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisJerk);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//defaultJerk := Main.ReadParameter.Value;
+
+
+////Axis Homing Velocity +ve direction
+////homingVelocity := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisCalibrationVelocityForward);
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisCalibrationVelocityForward);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//homingVelocity := Main.ReadParameter.Value;
+
+
+////Axis Manual Velocity (Fast)
+////manualVelocityFast := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisManualVelocityFast);
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisManualVelocityFast);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//manualVelocityFast := Main.ReadParameter.Value;
+
+
+////Axis Manual Velocity (Slow)
+////manualVelocitySlow := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisManualVelocitySlow);
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisManualVelocitySlow);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//manualVelocitySlow := Main.ReadParameter.Value;
+
+
+////Axis Jog Increment +ve Direction
+////jogIncrement := Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisJogIncrementForward);
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisJogIncrementForward);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//jogIncrement := Main.ReadParameter.Value;
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ReadEncoderParameters" Id="{36292ad9-d555-42b3-804e-9c81d4086bc8}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_ReadEncoderParameters : UINT
+VAR_INPUT
+	controlLoopID : UINT;
+END_VAR
+VAR_OUTPUT
+	invertEncoderDirection : BOOL;
+	scalingFactorNumerator : LREAL;
+	scalingFactorDenominator : LREAL;
+	encoderOffset : LREAL;
+	encoderMask : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Invert Encoder Direction
+Main.ReadBoolParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderDirectionInverse);
+Main.ReadBoolParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadBoolParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+invertEncoderDirection := Main.ReadBoolParameter.Value;
+
+
+// Encoder Scaling Factor Numerator
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderScalingNumerator);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+scalingFactorNumerator := Main.ReadParameter.Value;
+
+
+// Encoder Scaling Factor Denominator
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderScalingDenominator);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+scalingFactorDenominator := Main.ReadParameter.Value;
+
+
+// Encoder Offset
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderOffset);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+encoderOffset := Main.ReadParameter.Value;
+
+
+// Encoder Mask
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderMask);
+Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis1[controlLoopID],Enable:=FALSE);
+END_WHILE
+encoderMask := Main.ReadParameter.Value;
+
+//// Invert Encoder Direction
+//Main.ReadBoolParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisEncoderDirectionInverse);
+//Main.ReadBoolParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadBoolParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//invertEncoderDirection := Main.ReadBoolParameter.Value;
+
+
+//// Encoder Scaling Factor Numerator
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisEncoderScalingNumerator);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//scalingFactorNumerator := Main.ReadParameter.Value;
+
+
+//// Encoder Scaling Factor Denominator
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisEncoderScalingDenominator);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//scalingFactorDenominator := Main.ReadParameter.Value;
+
+
+//// Encoder Offset
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisEncoderOffset);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//encoderOffset := Main.ReadParameter.Value;
+
+
+//// Encoder Mask
+//Main.ReadParameter(Axis:=Main.Axis1,ParameterNumber:=MC_AxisParameter.AxisEncoderMask);
+//Main.ReadParameter(Axis:=Main.Axis1,Enable:=TRUE);
+//WHILE Main.ReadParameter.Busy DO
+//	Main.ReadParameter(Axis:=Main.Axis1,Enable:=FALSE);
+//END_WHILE
+//encoderMask := Main.ReadParameter.Value;
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetActiveEncoder" Id="{9a091db5-976f-4ff2-9331-531b0095b97c}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_SetActiveEncoder : BOOL
+VAR_INPUT
+	setAxisLoop : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Main.SetControlLoop(Axis:=Main.Axis1[setAxisLoop],Execute:=FALSE,SelectType:=E_SelectControlLoopType.SelectControlLoopType_Standard,EncoderIndex:=setAxisLoop);
+Main.SetControlLoop(Axis:=Main.Axis1[setAxisLoop],Execute:=TRUE);
+WHILE (Main.SetControlLoop.Done=FALSE) DO
+	Main.SetControlLoop(Axis:=Main.Axis1[setAxisLoop],Execute:=FALSE);
+END_WHILE
+RETURN;
+
+//Main.SetControlLoop(Axis:=Main.Axis1,Execute:=FALSE,SelectType:=E_SelectControlLoopType.SelectControlLoopType_Standard,EncoderIndex:=setAxisLoop);
+//Main.SetControlLoop(Axis:=Main.Axis1,Execute:=TRUE);
+//WHILE (Main.SetControlLoop.Done=FALSE) DO
+//	Main.SetControlLoop(Axis:=Main.Axis1,Execute:=FALSE);
+//END_WHILE
+//RETURN;
+
+//Main.SetControlLoop(Axis:=Main.Axis1[1],Execute:=FALSE,SelectType:=E_SelectControlLoopType.SelectControlLoopType_Standard,EncoderIndex:=1);
+//Main.SetControlLoop(Axis:=Main.Axis1[1],Execute:=TRUE);
+//WHILE (Main.SetControlLoop.Done=FALSE) DO
+//	Main.SetControlLoop(Axis:=Main.Axis1[1],Execute:=FALSE);
+//END_WHILE
+//RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_WriteAxisParameters" Id="{66fe626f-3ffa-44ff-b51a-f7cf0d645e56}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_WriteAxisParameters : BOOL
+VAR_INPUT
+	maxVelocity : UINT;
+	maxAcceleration : UINT;
+	defaultAcceleration : UINT;
+	defaultJerk : UINT;
+	homingVelocity : UINT;
+	manualVelocityFast : UINT;
+	manualVelocitySlow : UINT;
+	jogIncrement : UINT;
+	controlLoopID : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Axis Max Velocity
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisMaxVelocity,Value:=maxVelocity);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+// Axis Max Acceleration
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisMaximumAcceleration,Value:=maxAcceleration);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Max Deceleration
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisMaximumDeceleration,Value:=maxAcceleration);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Default Acceleration
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisAcc,Value:=defaultAcceleration);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Default Deceleration
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisDec,Value:=defaultAcceleration);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Default Jerk
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisJerk,Value:=defaultJerk);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Homing Velocity +ve direction
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisCalibrationVelocityForward,Value:=homingVelocity);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Homing Velocity -ve Direction
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisCalibrationVelocityBackward,Value:=homingVelocity);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Manual Velocity (Fast)
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisManualVelocityFast,Value:=manualVelocityFast);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Manual Velocity (Slow)
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisManualVelocitySlow,Value:=manualVelocitySlow);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Jog Increment +ve Direction
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisJogIncrementForward,Value:=jogIncrement);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+//Axis Jog Increment -ve Direction
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisJogIncrementBackward,Value:=jogIncrement);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_WriteEncoderParameters" Id="{75354755-7da6-4b6c-bdbd-b438e676dd36}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_WriteEncoderParameters : BOOL
+VAR_INPUT
+	//invertEncoderDirection : BOOL;
+	scalingFactorNumerator : LREAL;
+	scalingFactorDenominator : LREAL;
+	encoderOffset : UINT;
+	encoderMask : DINT;
+	controlLoopID : UINT;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// encoder direction inverse
+//Main.WriteBoolParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderDirectionInverse,Value:=invertEncoderDirection);
+//Main.WriteBoolParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+//WHILE (Main.WriteBoolParameter.Busy) DO
+//	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+//END_WHILE
+
+// Encoder scaling factor numerator
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderScalingNumerator,Value:=scalingFactorNumerator);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+// Encoder scaling factor denominator
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderScalingDenominator,Value:=scalingFactorDenominator);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+// Encoder offset
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderOffset,Value:=encoderOffset);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+// Encoder Mask
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderMask,Value:=encoderMask);
+Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
+END_WHILE
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Functions">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_EnableAxis">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="13" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_MoveAbsolute">
+      <LineId Id="11" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="60" Count="14" />
+      <LineId Id="77" Count="5" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_MoveRelative">
+      <LineId Id="13" Count="13" />
+      <LineId Id="29" Count="6" />
+      <LineId Id="38" Count="20" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_ReadActiveEncoder">
+      <LineId Id="5" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="34" Count="9" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_ReadActiveLoop">
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_ReadAxisParameters">
+      <LineId Id="17" Count="1" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="147" Count="2" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="36" Count="3" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="50" Count="3" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="154" Count="1" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="156" Count="1" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="71" Count="3" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="158" Count="1" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="78" Count="3" />
+      <LineId Id="140" Count="1" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="85" Count="3" />
+      <LineId Id="144" Count="1" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="187" Count="76" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_ReadEncoderParameters">
+      <LineId Id="16" Count="9" />
+      <LineId Id="27" Count="8" />
+      <LineId Id="37" Count="8" />
+      <LineId Id="47" Count="8" />
+      <LineId Id="57" Count="5" />
+      <LineId Id="76" Count="42" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_SetActiveEncoder">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="34" Count="5" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="21" Count="5" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_WriteAxisParameters">
+      <LineId Id="33" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="43" Count="5" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="50" Count="5" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="57" Count="5" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="64" Count="5" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="71" Count="5" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="78" Count="5" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="85" Count="5" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="92" Count="5" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="99" Count="5" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_WriteEncoderParameters">
+      <LineId Id="20" Count="4" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="26" Count="5" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="33" Count="4" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="40" Count="5" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="47" Count="5" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

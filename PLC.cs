@@ -6,6 +6,7 @@ using TwinCAT.Ads;
 
 public class PLC 
 {    
+    /*
     private AdsClient _tcADS = new AdsClient();
     public AdsClient TcADS
     {
@@ -33,9 +34,11 @@ public class PLC
         get { return _port; }
         set { _port = value; }
     }
+    */
     
 
-    //public AdsClient TcADS = new AdsClient();
+    public AdsClient TcADS = new AdsClient();
+    public AdsState AdsState;
     
     public PLC(string AMSID, int port)
     {

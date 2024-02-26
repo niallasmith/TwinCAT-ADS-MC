@@ -18,10 +18,10 @@ partial class MCForm1
     public TextBox readPosText;
     public TextBox setVelText;
     public TextBox readVelText;
-    public TextBox setAcclText;
-    public TextBox readAcclText;
+    //public TextBox setAcclText;
+    //public TextBox readAcclText;
     public Label velocityLabel;
-    public Label accelerationLabel;
+    //public Label accelerationLabel;
     public Label positionLabel;
     public Label setLabel;
     public Label readLabel;
@@ -70,7 +70,7 @@ partial class MCForm1
     private void FormDesignSetup()
     {
         System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer(); // setup new timer for refreshing form data
-        timer1.Interval=1000; // 5 seconds
+        timer1.Interval=1000; // 1 second
         timer1.Tick += new EventHandler(timer1_Tick);
         timer1.Start();
 
@@ -205,6 +205,7 @@ partial class MCForm1
         readPosText.Size = new Size(75,50);
         readPosText.Location = new Point(325,250);
         readPosText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
+        readPosText.ReadOnly = true;
         this.Controls.Add(readPosText);
         
         /*
@@ -237,6 +238,7 @@ partial class MCForm1
         readVelText.Size = new Size(75,50);
         readVelText.Location = new Point(325,300);
         readVelText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
+        readVelText.ReadOnly = true;
         this.Controls.Add(readVelText);
 
         /*
@@ -254,22 +256,23 @@ partial class MCForm1
 
         #region Acceleration
 
-        accelerationLabel = new Label();
-        accelerationLabel.Size = new Size(80,20);
-        accelerationLabel.Location = new Point(20,350);
-        accelerationLabel.Text = "Acceleration:";
-        this.Controls.Add(accelerationLabel);
+        //accelerationLabel = new Label();
+        //accelerationLabel.Size = new Size(80,20);
+        //accelerationLabel.Location = new Point(20,350);
+        //accelerationLabel.Text = "Acceleration:";
+        //this.Controls.Add(accelerationLabel);
 
-        setAcclText = new TextBox(); // set position text box
-        setAcclText.Size = new Size(100,50);
-        setAcclText.Location = new Point(150,350);
-        this.Controls.Add(setAcclText);
+        //setAcclText = new TextBox(); // set position text box
+        //setAcclText.Size = new Size(100,50);
+        //setAcclText.Location = new Point(150,350);
+        //this.Controls.Add(setAcclText);
 
-        readAcclText = new TextBox(); // actual read set position text box
-        readAcclText.Size = new Size(75,50);
-        readAcclText.Location = new Point(325,350);
-        readAcclText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
-        this.Controls.Add(readAcclText);
+        //readAcclText = new TextBox(); // actual read set position text box
+        //readAcclText.Size = new Size(75,50);
+        //readAcclText.Location = new Point(325,350);
+        //readAcclText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
+        //readAcclText.ReadOnly = true;
+        //this.Controls.Add(readAcclText);
 
         #endregion
 
@@ -357,6 +360,6 @@ partial class MCForm1
 
         CenterToScreen();
 
-        SetupForm1.FormClosed += new FormClosedEventHandler(SetupForm1_Closed);
+        //SetupForm1.FormClosed += new FormClosedEventHandler(SetupForm1_Closed);
     }
 }

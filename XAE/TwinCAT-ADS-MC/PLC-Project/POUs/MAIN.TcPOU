@@ -4,47 +4,64 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	nState: UINT := 0;
-	Axis1 : AXIS_REF;
+	Axis1 : ARRAY [0..2] OF AXIS_REF;
+	//Axis1 : AXIS_REF;
+	//Axis1B : AXIS_REF;
 	MoveAbsolute : MC_MoveAbsolute;
+	MoveRelative : MC_MoveRelative;
+	WriteParameter : MC_WriteParameter;
+	ReadParameter : MC_ReadParameter;
 	AxisPower : MC_Power;
 	Reset : MC_Reset;
+	FB_Functions : FB_Functions;
+	AxisParams : MC_AxisParameter;
+	ReadDriveAddress : MC_ReadDriveAddress;
+	SetControlLoop : MC_SelectControlLoop;
+	ReadBoolParameter : MC_ReadBoolParameter;
+	WriteBoolParameter : MC_WriteBoolParameter;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Axis1();
+      <ST><![CDATA[Axis1[0]();
+Axis1[1]();
+//Axis1[2]();
+//Axis1();
 
-CASE nState OF
-	0:
-	nState := 10;
-	
-	10:
-	MoveAbsolute(Axis:=Axis1,Execute:=FALSE);
-	Reset(Axis:=Axis1,Execute:=FALSE);
-	nState := 20;
-	
-	20:
-	AxisPower(Axis:=Axis1,
-			Enable:=TRUE,
-			Enable_Positive:=TRUE,
-			Enable_Negative:=TRUE);
-			
-	IF GVL_VARS1.execute THEN
-		nState := 30;
-	END_IF
-	
-	
-	30:
-	MoveAbsolute(Axis:=Axis1,
-					Position:=GVL_VARS1.position,
-					Velocity:=GVL_VARS1.velocity);
-	MoveAbsolute(Axis:=Axis1,
-					Execute:=TRUE);		
-	IF MoveAbsolute.Done THEN
-		MoveAbsolute(Axis:=Axis1,Execute:=FALSE);
-	END_IF
-	GVL_VARS1.execute := FALSE;
-	nState := 10;
-END_CASE
+
+//E_NcEncoderType.NcEncoderType_Simulation
+
+//CASE nState OF
+//	0:
+//	nState := 10;
+//	
+//	10:
+//	MoveAbsolute(Axis:=Axis1[0],Execute:=FALSE);
+//	Reset(Axis:=Axis1[0],Execute:=FALSE);
+//	nState := 20;
+//	
+//	20:
+//	AxisPower(Axis:=Axis1[0],
+//			Enable:=TRUE,
+//			Enable_Positive:=TRUE,
+//			Enable_Negative:=TRUE);
+//			
+//	IF GVL_VARS1.execute THEN
+//		nState := 30;
+//	END_IF
+//
+//	
+//	30:
+//	MoveAbsolute(Axis:=Axis1[0],
+//					Position:=GVL_VARS1.position,
+//					Velocity:=GVL_VARS1.velocity);
+//	MoveAbsolute(Axis:=Axis1[0],
+//					Execute:=TRUE);		
+//	IF MoveAbsolute.Done THEN
+//		MoveAbsolute(Axis:=Axis1[0],Execute:=FALSE);
+//	END_IF
+//	GVL_VARS1.execute := FALSE;
+//	nState := 10;
+//END_CASE
 
 
 //AxisPower(Axis:=Axis1);
@@ -52,7 +69,14 @@ END_CASE
 //Reset(Axis:=Axis1);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="10" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="11" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="24" Count="1" />

@@ -1,5 +1,6 @@
 // Event handler for handling Form1 events e.g. buttons pressed etc.
 
+using Microsoft.VisualBasic;
 using TwinCAT.Ads;
 
 namespace TwinCAT_ADS_MC;
@@ -14,7 +15,7 @@ public partial class MCForm1
     public ushort readVelValue;
     public ushort readAcclValue;
     public ushort axesNum = 1;
-    public static SetupForm1 SetupForm1 = new SetupForm1();
+    public SetupForm1 SetupForm;
     //public Program myPlc;
     private void connectButton_Click(object sender, EventArgs e) // initialise button pressed
     {
@@ -144,10 +145,10 @@ public partial class MCForm1
             return;
         }
         
-        readPosValue = ncAxis.ReadPosition(myPLC);
-        readVelValue = ncAxis.ReadVelocity(myPLC);
-        readAcclValue = ncAxis.ReadAcceleration(myPLC);
-        RefreshData();
+        //object vars = ncAxis.ReadAxisParameters(myPLC);
+        readPosText.Text = Convert.ToString(readPosValue);
+        readVelText.Text = Convert.ToString(readVelValue);
+        //readAcclText.Text = Convert.ToString(readAcclValue);
     }
 
     private void localCheckBox_Click(object sender, EventArgs e) // check box clicked
@@ -166,7 +167,9 @@ public partial class MCForm1
     private void axesSetupButton_Click(object sender, EventArgs e) // initialise button pressed
     {
         //Application.Run(SetupForm1);
-        SetupForm1.ShowDialog();
+        //SetupForm1 SetupForm1
+        SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axesNum);
+        SetupForm.ShowDialog();
     }
 
 
@@ -174,21 +177,21 @@ public partial class MCForm1
     {
         setPosText.ReadOnly = false;
         setVelText.ReadOnly = false;
-        setAcclText.ReadOnly = false;
+        //setAcclText.ReadOnly = false;
     } 
 
     private void moveRelativeRadio_Click(object sender, EventArgs e)
     {
         setPosText.ReadOnly = false;
         setVelText.ReadOnly = false;
-        setAcclText.ReadOnly = false;
+        //setAcclText.ReadOnly = false;
     } 
 
     private void moveHomeRadio_Click(object sender, EventArgs e)
     {
         setPosText.ReadOnly = true;
         setVelText.ReadOnly = false;
-        setAcclText.ReadOnly = false;
+        //setAcclText.ReadOnly = false;
     } 
 
     private void executeButton_Click(object sender, EventArgs e)
@@ -199,6 +202,8 @@ public partial class MCForm1
             return;
         }
 
+        /*
+
         if (setPosText.Text!="")
         {
             WritePosition();
@@ -208,18 +213,36 @@ public partial class MCForm1
         {
             WriteVelocity();
         }
+        */
 
-        if (setAcclText.Text!="")
+        UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC)[0];
+
+        if (moveAbsoluteRadio.Checked)
         {
-            WriteAcceleration();
+            ncAxis.MoveAbsolute(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
+        } 
+        else if (moveRelativeRadio.Checked) 
+        {
+            ncAxis.MoveRelative(myPLC, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text), activeLoopID);
         }
+        else
+        {
+            setPosText.Text = "error";
+            setVelText.Text = "error";
+        }
+
+        //if (setAcclText.Text!="")
+        //{
+        //    WriteAcceleration();
+        //}
 
         setPosText.Text = "";
         setVelText.Text = "";
-        setAcclText.Text = "";
-        WriteExecute();
+        //setAcclText.Text = "";
+        //WriteExecute();
     }
 
+    /*
     private void WriteExecute()
     {
         ncAxis.WriteExecute(myPLC, true);
@@ -265,6 +288,7 @@ public partial class MCForm1
             return;
         }
     }
+    */
 
     private void axisConnectButton_Click(object sender, EventArgs e)
     {
