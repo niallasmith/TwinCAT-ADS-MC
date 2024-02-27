@@ -11,26 +11,26 @@ partial class SetupForm1
 
     private void setAxisParams_Click(object sender, EventArgs e)
     {
-        uint maxVeloc;
-        uint maxAccel;
-        uint defaultAccel;
-        uint defaultJerk;
-        uint homingVeloc;
-        uint manualVelocFast;
-        uint manualVelocSlow;
-        uint jogIncrement;
+        double maxVeloc;
+        double maxAccel;
+        double defaultAccel;
+        double defaultJerk;
+        double homingVeloc;
+        double manualVelocFast;
+        double manualVelocSlow;
+        double jogIncrement;
 
         #region value handling
 
         if (maxVelocityText.Text == "") 
         {
-            maxVeloc = Convert.ToUInt16(maxVelocityActualText.Text);
+            maxVeloc = Convert.ToDouble(maxVelocityActualText.Text);
         } 
         else
         {
             try
             {  
-                maxVeloc = Convert.ToUInt16(maxVelocityText.Text);
+                maxVeloc = Convert.ToDouble(maxVelocityText.Text);
             }
             catch
             {
@@ -40,13 +40,13 @@ partial class SetupForm1
 
         if (maxAccelerationText.Text == "") 
         {
-            maxAccel = Convert.ToUInt16(maxAccelerationActualText.Text);
+            maxAccel = Convert.ToDouble(maxAccelerationActualText.Text);
         } 
         else
         {
             try
             {  
-                maxAccel = Convert.ToUInt16(maxAccelerationText.Text);
+                maxAccel = Convert.ToDouble(maxAccelerationText.Text);
             }
             catch
             {
@@ -56,13 +56,13 @@ partial class SetupForm1
 
         if (defaultAccelText.Text == "") 
         {
-            defaultAccel = Convert.ToUInt16(defaultAccelActualText.Text);
+            defaultAccel = Convert.ToDouble(defaultAccelActualText.Text);
         } 
         else
         {
             try
             {  
-                defaultAccel = Convert.ToUInt16(defaultAccelText.Text);
+                defaultAccel = Convert.ToDouble(defaultAccelText.Text);
             }
             catch
             {
@@ -72,13 +72,13 @@ partial class SetupForm1
 
         if (defaultJerkText.Text == "") 
         {
-            defaultJerk = Convert.ToUInt16(defaultJerkActualText.Text);
+            defaultJerk = Convert.ToDouble(defaultJerkActualText.Text);
         } 
         else
         {
             try
             {  
-                defaultJerk = Convert.ToUInt16(defaultJerkText.Text);
+                defaultJerk = Convert.ToDouble(defaultJerkText.Text);
             }
             catch
             {
@@ -88,13 +88,13 @@ partial class SetupForm1
 
         if (homingVelocText.Text == "") 
         {
-            homingVeloc = Convert.ToUInt16(homingVelocActualText.Text);
+            homingVeloc = Convert.ToDouble(homingVelocActualText.Text);
         } 
         else
         {
             try
             {  
-                homingVeloc = Convert.ToUInt16(homingVelocText.Text);
+                homingVeloc = Convert.ToDouble(homingVelocText.Text);
             }
             catch
             {
@@ -104,13 +104,13 @@ partial class SetupForm1
 
         if (manualVelocFastText.Text == "") 
         {
-            manualVelocFast = Convert.ToUInt16(manualVelocFastActualText.Text);
+            manualVelocFast = Convert.ToDouble(manualVelocFastActualText.Text);
         } 
         else
         {
             try
             {  
-                manualVelocFast = Convert.ToUInt16(manualVelocFastText.Text);
+                manualVelocFast = Convert.ToDouble(manualVelocFastText.Text);
             }
             catch
             {
@@ -120,13 +120,13 @@ partial class SetupForm1
 
         if (manualVelocSlowText.Text == "") 
         {
-            manualVelocSlow = Convert.ToUInt16(manualVelocSlowActualText.Text);
+            manualVelocSlow = Convert.ToDouble(manualVelocSlowActualText.Text);
         } 
         else
         {
             try
             {  
-                manualVelocSlow = Convert.ToUInt16(manualVelocSlowText.Text);
+                manualVelocSlow = Convert.ToDouble(manualVelocSlowText.Text);
             }
             catch
             {
@@ -136,13 +136,13 @@ partial class SetupForm1
 
         if (jogIncrementText.Text == "") 
         {
-            jogIncrement = Convert.ToUInt16(jogIncrementActualText.Text);
+            jogIncrement = Convert.ToDouble(jogIncrementActualText.Text);
         } 
         else
         {
             try
             {  
-                jogIncrement = Convert.ToUInt16(jogIncrementText.Text);
+                jogIncrement = Convert.ToDouble(jogIncrementText.Text);
             }
             catch
             {
@@ -169,6 +169,14 @@ partial class SetupForm1
         object[] encoderVars = new object[5];
         encoderVars = (object[])ncAxis.ReadEncoderParams(myPLC, axisID, loopID);
         RefreshEncoderData(encoderVars);
+
+        object[] driveVars = new object[2];
+        driveVars = (object[])ncAxis.ReadDriveParameters(myPLC, axisID, loopID);
+        RefreshDriveData(driveVars);
+
+        object[] controllerVars = new object[1];
+        controllerVars = (object[])ncAxis.ReadControllerParameters(myPLC, axisID, loopID);
+        RefreshControllerData(controllerVars);
     }
 
     private void controlLoopRadio_Click(object sender, EventArgs e)
@@ -187,10 +195,15 @@ partial class SetupForm1
 
     private void encoderParamsSetButton_Click(object sender, EventArgs e)
     {
+        bool invertDirection;
         double scalingFactorNum;
         double scalingFactorDen;
-        uint offset;
+        double offset;
         uint mask;
+
+        #region value handling
+
+        invertDirection = encoderInvertedDirectionCheck.Checked;
 
         if (encoderScalingNumeratorText.Text == "") 
         {
@@ -226,13 +239,13 @@ partial class SetupForm1
 
         if (encoderOffsetText.Text == "") 
         {
-            offset = Convert.ToUInt32(encoderOffsetReadText.Text);
+            offset = Convert.ToDouble(encoderOffsetReadText.Text);
         } 
         else
         {
             try
             {  
-                offset = Convert.ToUInt32(encoderOffsetText.Text);
+                offset = Convert.ToDouble(encoderOffsetText.Text);
             }
             catch
             {
@@ -256,9 +269,11 @@ partial class SetupForm1
             }
         }
 
-        object[] vars = {axisID,loopID,scalingFactorNum,scalingFactorDen,offset,mask};
+        #endregion
 
-        ncAxis.SetEncoderParams(myPLC,vars);
+        object[] vars = {axisID,loopID,invertDirection,scalingFactorNum,scalingFactorDen,offset,mask};
+
+        ncAxis.WriteEncoderParameters(myPLC,vars);
     }
 
     private void getCurrentLoopID()
@@ -272,6 +287,65 @@ partial class SetupForm1
         {
             controlLoop1Radio.Checked = true;
         }
+    }
+
+    private void setControllerParamsButton_Click(object sender, EventArgs e)
+    {
+        double kvparam;
+
+        #region value handling
+
+        if (encoderMaskText.Text == "") 
+        {
+            kvparam = Convert.ToDouble(controllerKvText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                kvparam = Convert.ToDouble(controllerKvText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        #endregion
+
+        object[] vars = {axisID, loopID,kvparam};
+        ncAxis.WriteControllerParameters(myPLC, vars);
+    }
+
+    private void setDriveParamsButton_Click(object sender, EventArgs e)
+    {
+        bool invertPolarity;
+        double refvelo;
+        
+        #region value handling.
+
+        invertPolarity = driveInvertCheck.Checked;
+
+        if (encoderMaskText.Text == "") 
+        {
+            refvelo = Convert.ToDouble(driveReferenceVeloActualText.Text);
+        } 
+        else
+        {
+            try
+            {  
+                refvelo = Convert.ToDouble(driveReferenceVeloText.Text);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        #endregion
+
+        object[] vars = {axisID, loopID, invertPolarity, refvelo};
+        ncAxis.WriteDriveParameters(myPLC, vars);
     }
 
 }

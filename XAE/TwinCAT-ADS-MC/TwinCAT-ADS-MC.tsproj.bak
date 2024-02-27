@@ -2349,7 +2349,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{73569637-AF5B-4FB2-BF7D-5E0CB6B8BB65}" Name="PLC-Project" PrjFilePath="PLC-Project\PLC-Project.plcproj" TmcFilePath="PLC-Project\PLC-Project.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC-Project\PLC-Project.tmc" TmcHash="{F1CBB191-FB89-A382-6EF5-BE20B7B60FD0}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC-Project\PLC-Project.tmc" TmcHash="{0F85850D-6E2B-4743-1D7E-9C076EF88B75}">
 					<Name>PLC-Project Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">

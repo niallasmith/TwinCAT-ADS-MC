@@ -9,7 +9,7 @@ public partial class SetupForm1 : Form
     
     public PLC myPLC;
     public NCAxis ncAxis;
-    
+
     public uint axisID;
     public uint loopID = 0;
     public SetupForm1(PLC myPLCIn, NCAxis ncAxisIn, uint axisIDIn)
@@ -39,6 +39,17 @@ public partial class SetupForm1 : Form
         encoderScalingDenominatorReadText.Text = Convert.ToString(vars[2]);
         encoderOffsetReadText.Text = Convert.ToString(vars[3]);
         encoderMaskReadText.Text = Convert.ToString(vars[4]);
+    }
+
+    public void RefreshDriveData(object[] vars)
+    {
+        driveInvertActualText.Text = Convert.ToString(vars[0]);
+        driveReferenceVeloActualText.Text = Convert.ToString(vars[1]);
+    }
+
+    public void RefreshControllerData(object[] vars)
+    {
+        controllerKvActualText.Text = Convert.ToString(vars[0]);
     }
 
 }

@@ -51,7 +51,6 @@ partial class SetupForm1
     public TextBox encoderScalingDenominatorText;
     public TextBox encoderOffsetText;
     public TextBox encoderMaskText;
-    
     public Label encoderInvertedDirectionLabel;
     public Label encoderScalingNumeratorLabel;
     public Label encoderScalingDenominatorLabel;
@@ -70,6 +69,13 @@ partial class SetupForm1
     public Label driveParamsLabel;
     public Label driveParamsSetLabel;
     public Label driveParamsReadLabel;
+    public Label driveInvertLabel;
+    public CheckBox driveInvertCheck;
+    public TextBox driveInvertActualText;
+    public Label driveReferenceVeloLabel;
+    public TextBox driveReferenceVeloText;
+    public TextBox driveReferenceVeloActualText; 
+    public Button setDriveParamsButton;
 
     #endregion
 
@@ -78,7 +84,10 @@ partial class SetupForm1
     public Label controllerParamsLabel;
     public Label controllerParamsSetLabel;
     public Label controllerParamsReadLabel;
-    public TextBox controllerMode;
+    public Label controllerKvLabel;
+    public TextBox controllerKvText;
+    public TextBox controllerKvActualText;
+    public Button setControllerParamsButton;
     #endregion
 
 
@@ -94,7 +103,7 @@ partial class SetupForm1
     {
         this.components = new System.ComponentModel.Container();
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = new System.Drawing.Size(1200, 500);
+        this.ClientSize = new System.Drawing.Size(1200, 400);
         this.Text = "TwinCAT-ADS-MC Axis Setup";
 
         FormDesignSetup();
@@ -141,7 +150,7 @@ partial class SetupForm1
 
         #endregion
 
-        #region axis read
+        #region max velocity
 
         maxVelocityLabel = new Label();
         maxVelocityLabel.Size = new Size(100,20);
@@ -506,11 +515,52 @@ partial class SetupForm1
         driveParamsReadLabel.Text = "Actual";
         this.Controls.Add(driveParamsReadLabel);
 
+        setDriveParamsButton = new Button();
+        setDriveParamsButton.Size = new Size(100,40);
+        setDriveParamsButton.Location = new Point(750,325);
+        setDriveParamsButton.Text = "Set Drive Params";
+        this.Controls.Add(setDriveParamsButton);
+        setDriveParamsButton.Click += new EventHandler(setDriveParamsButton_Click);
+
         #region drive set
+
+        driveInvertLabel = new Label();
+        driveInvertLabel.Size = new Size(100,20);
+        driveInvertLabel.Location = new Point(645,80);
+        driveInvertLabel.Text = "Invert motor polarity";
+        this.Controls.Add(driveInvertLabel);
+
+        driveInvertCheck = new CheckBox();
+        driveInvertCheck.Size = new Size(20,20);
+        driveInvertCheck.Location = new Point(745,80);
+        this.Controls.Add(driveInvertCheck);
+
+        driveReferenceVeloLabel = new Label();
+        driveReferenceVeloLabel.Size = new Size(80,40);
+        driveReferenceVeloLabel.Location = new Point(645,110);
+        driveReferenceVeloLabel.Text = "Reference velocity";
+        this.Controls.Add(driveReferenceVeloLabel);
+
+        driveReferenceVeloText = new TextBox();
+        driveReferenceVeloText.Size = new Size(60,20);
+        driveReferenceVeloText.Location = new Point(725,110);
+        this.Controls.Add(driveReferenceVeloText);
 
         #endregion
 
         #region drive read
+
+        driveInvertActualText = new TextBox();
+        driveInvertActualText.Size = new Size(60,20);
+        driveInvertActualText.Location = new Point(800,80);
+        driveInvertActualText.ReadOnly = true;
+        this.Controls.Add(driveInvertActualText);
+
+        driveReferenceVeloActualText = new TextBox();
+        driveReferenceVeloActualText.Size = new Size(60,20);
+        driveReferenceVeloActualText.Location = new Point(800,110);
+        driveReferenceVeloActualText.ReadOnly = true;
+        this.Controls.Add(driveReferenceVeloActualText);
 
         #endregion
 
@@ -537,11 +587,35 @@ partial class SetupForm1
         controllerParamsReadLabel.Text = "Actual";
         this.Controls.Add(controllerParamsReadLabel);
 
+        setControllerParamsButton = new Button();
+        setControllerParamsButton.Size = new Size(100,40);
+        setControllerParamsButton.Location = new Point(1050,325);
+        setControllerParamsButton.Text = "Set Controller Params";
+        this.Controls.Add(setControllerParamsButton);
+        setControllerParamsButton.Click += new EventHandler(setControllerParamsButton_Click);
+
         #region controller set
+
+        controllerKvLabel = new Label();
+        controllerKvLabel.Size = new Size(60,40);
+        controllerKvLabel.Location = new Point(945,80);
+        controllerKvLabel.Text = "Kv value";
+        this.Controls.Add(controllerKvLabel);
+
+        controllerKvText = new TextBox();
+        controllerKvText.Size = new Size(60,20);
+        controllerKvText.Location = new Point(1020,80);
+        this.Controls.Add(controllerKvText);
 
         #endregion
 
         #region controller read
+
+        controllerKvActualText = new TextBox();
+        controllerKvActualText.Size = new Size(60,20);
+        controllerKvActualText.Location = new Point(1100,80);
+        controllerKvActualText.ReadOnly = true;
+        this.Controls.Add(controllerKvActualText);
 
         #endregion
 

@@ -32,8 +32,8 @@ METHOD M_MoveAbsolute : BOOL
 VAR_INPUT
 	axisID : UINT;
 	loopID : UINT;
-	position : UINT;
-	velocity : UINT;
+	position : LREAL;
+	velocity : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -61,8 +61,8 @@ METHOD M_MoveRelative : BOOL
 VAR_INPUT
 	axisID : UINT;
 	loopID : UINT;
-	position : UINT;
-	velocity : UINT;
+	position : LREAL;
+	velocity : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -193,6 +193,63 @@ jogIncrement := Main.ReadParameter.Value;
 RETURN;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_ReadControllerParameters" Id="{7fb38bd3-41ba-4da0-9f1e-44c79b423464}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_ReadControllerParameters : UINT
+VAR_INPUT
+	axisID : UINT;
+	loopID : UINT;
+END_VAR
+VAR_OUTPUT
+	kvParam : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Controller Kv parameter
+Main.ReadParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisPositionControlKv);
+Main.ReadParameter(Axis:=Main.Axis[axisID][loopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis[axisID][loopID],Enable:=FALSE);
+END_WHILE
+kvParam := Main.ReadParameter.Value;
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ReadDriveParameters" Id="{02c22897-cd77-4264-9838-7064c169a620}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_ReadDriveParameters : BOOL
+VAR_INPUT
+	axisID : UINT;
+	loopID : UINT;
+END_VAR
+VAR_OUTPUT
+	inversePolarity : BOOL;
+	refVelocity : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Drive inverse motor polarity
+Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisMotorDirectionInverse,Enable:=TRUE,ReadMode:=E_ReadMode.READMODE_ONCE);
+//Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],Enable:=TRUE);
+//WHILE (Main.ReadBoolParameter.Busy = TRUE) DO
+//	Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],Enable:=FALSE);
+//END_WHILE
+//IF Main.ReadBoolParameter.Valid THEN
+	inversePolarity := Main.ReadBoolParameter.Value;
+//END_IF
+Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],Enable:=FALSE);
+
+// Drive Reference Velocity
+Main.ReadParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisRefVeloOnRefOutput);
+Main.ReadParameter(Axis:=Main.Axis[axisID][loopID],Enable:=TRUE);
+WHILE Main.ReadParameter.Busy DO
+	Main.ReadParameter(Axis:=Main.Axis[axisID][loopID],Enable:=FALSE);
+END_WHILE
+refVelocity := Main.ReadParameter.Value;
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_ReadEncoderParameters" Id="{36292ad9-d555-42b3-804e-9c81d4086bc8}">
       <Declaration><![CDATA[{attribute 'TcRpcEnable'}
 METHOD M_ReadEncoderParameters : UINT
@@ -210,12 +267,15 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Invert Encoder Direction
-Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisEncoderDirectionInverse);
-Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],Enable:=TRUE);
-WHILE Main.ReadParameter.Busy DO
-	Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],Enable:=FALSE);
-END_WHILE
-invertEncoderDirection := Main.ReadBoolParameter.Value;
+Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisEncoderDirectionInverse,Enable:=TRUE,ReadMode:=E_ReadMode.READMODE_ONCE);
+//Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID]);
+//WHILE (Main.ReadParameter.Busy = TRUE) DO
+//	Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],Enable:=FALSE);
+//END_WHILE
+//IF Main.ReadBoolParameter.Valid THEN
+	invertEncoderDirection := Main.ReadBoolParameter.Value;
+//END_IF
+Main.ReadBoolParameter(Axis:=Main.Axis[axisID][loopID],Enable:=FALSE);
 
 
 // Encoder Scaling Factor Numerator
@@ -281,14 +341,14 @@ METHOD M_WriteAxisParameters : BOOL
 VAR_INPUT
 	axisID: UINT;
 	loopID: UINT;
-	maxVelocity : UINT;
-	maxAcceleration : UINT;
-	defaultAcceleration : UINT;
-	defaultJerk : UINT;
-	homingVelocity : UINT;
-	manualVelocityFast : UINT;
-	manualVelocitySlow : UINT;
-	jogIncrement : UINT;
+	maxVelocity : LREAL;
+	maxAcceleration : LREAL;
+	defaultAcceleration : LREAL;
+	defaultJerk : LREAL;
+	homingVelocity : LREAL;
+	manualVelocityFast : LREAL;
+	manualVelocitySlow : LREAL;
+	jogIncrement : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -379,30 +439,76 @@ END_WHILE
 RETURN;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_WriteControllerParameters" Id="{1ba865fd-b48a-4760-a428-0454771760b0}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_WriteControllerParameters : BOOL
+VAR_INPUT
+	axisID : UINT;
+	loopID : UINT;
+	kvParam : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Controller Kv Parameter
+Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisPositionControlKv,Value:=kvParam);
+Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+END_WHILE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_WriteDriveParameters" Id="{c2adb773-31f4-400d-bf96-2e61300b72a8}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_WriteDriveParameters : BOOL
+VAR_INPUT
+	axisID : UINT;
+	loopID : UINT;
+	invertPolarity : BOOL;
+	refVelocity : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Inverse motor polarity
+Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisMotorDirectionInverse,Value:=invertPolarity);
+Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],Execute:=TRUE);
+WHILE (Main.WriteBoolParameter.Busy) DO
+	Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+END_WHILE
+Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+
+// Drive Reference Velocity
+Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisRefVeloOnRefOutput,Value:=refVelocity);
+Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],Execute:=TRUE);
+WHILE (Main.WriteParameter.Busy) DO
+	Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+END_WHILE]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_WriteEncoderParameters" Id="{75354755-7da6-4b6c-bdbd-b438e676dd36}">
       <Declaration><![CDATA[{attribute 'TcRpcEnable'}
 METHOD M_WriteEncoderParameters : BOOL
 VAR_INPUT
 	axisID : UINT;
 	loopID : UINT;
-	//invertEncoderDirection : BOOL;
+	invertEncoderDirection : BOOL;
 	scalingFactorNumerator : LREAL;
 	scalingFactorDenominator : LREAL;
-	encoderOffset : UINT;
+	encoderOffset : LREAL;
 	encoderMask : DINT;
 END_VAR
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// encoder direction inverse
-//Main.WriteBoolParameter(Axis:=Main.Axis1[controlLoopID],ParameterNumber:=MC_AxisParameter.AxisEncoderDirectionInverse,Value:=invertEncoderDirection);
-//Main.WriteBoolParameter(Axis:=Main.Axis1[controlLoopID],Execute:=TRUE);
-//WHILE (Main.WriteBoolParameter.Busy) DO
-//	Main.WriteParameter(Axis:=Main.Axis1[controlLoopID],Execute:=FALSE);
-//END_WHILE
+        <ST><![CDATA[// Encoder direction inverse
+Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisEncoderDirectionInverse,Value:=invertEncoderDirection);
+Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],Execute:=TRUE);
+WHILE (Main.WriteBoolParameter.Busy) DO
+	Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+END_WHILE
+Main.WriteBoolParameter(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
 
 // Encoder scaling factor numerator
-Main.WriteParameter(Axis:=Main.Axis[0][loopID],ParameterNumber:=MC_AxisParameter.AxisEncoderScalingNumerator,Value:=scalingFactorNumerator);
+Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],ParameterNumber:=MC_AxisParameter.AxisEncoderScalingNumerator,Value:=scalingFactorNumerator);
 Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],Execute:=TRUE);
 WHILE (Main.WriteParameter.Busy) DO
 	Main.WriteParameter(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
@@ -510,8 +616,32 @@ RETURN;]]></ST>
       <LineId Id="100" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Functions.M_ReadControllerParameters">
+      <LineId Id="6" Count="5" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_ReadDriveParameters">
+      <LineId Id="19" Count="0" />
+      <LineId Id="24" Count="2" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="6" Count="5" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Functions.M_ReadEncoderParameters">
-      <LineId Id="16" Count="9" />
+      <LineId Id="16" Count="5" />
+      <LineId Id="149" Count="2" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="24" Count="1" />
       <LineId Id="27" Count="8" />
       <LineId Id="37" Count="8" />
       <LineId Id="47" Count="8" />
@@ -562,9 +692,23 @@ RETURN;]]></ST>
       <LineId Id="9" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Functions.M_WriteControllerParameters">
+      <LineId Id="9" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_WriteDriveParameters">
+      <LineId Id="23" Count="0" />
+      <LineId Id="26" Count="3" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="10" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Functions.M_WriteEncoderParameters">
       <LineId Id="20" Count="4" />
       <LineId Id="16" Count="0" />
+      <LineId Id="65" Count="0" />
       <LineId Id="26" Count="5" />
       <LineId Id="25" Count="0" />
       <LineId Id="38" Count="0" />

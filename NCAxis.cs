@@ -124,9 +124,19 @@ public class NCAxis
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_SetActiveEncoder", vars);
     }
 
-    public void SetEncoderParams(PLC plc,object[] vars)
+    public void WriteEncoderParameters(PLC plc,object[] vars)
     {
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteEncoderParameters", vars);
+    }
+
+    public void WriteControllerParameters(PLC plc, object[] vars)
+    {
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteControllerParameters", vars);
+    }
+
+    public void WriteDriveParameters(PLC plc, object[] vars)
+    {
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteDriveParameters", vars);
     }
 
     #endregion
@@ -156,10 +166,26 @@ public class NCAxis
         return vars;
     }
 
+    public object[] ReadDriveParameters(PLC plc, uint axisID, uint loopID)
+    {
+        object[] varsin = {axisID, loopID};
+        object[] varsout = new object [2];
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadDriveParameters", varsin, out varsout);
+        return varsout;
+    }
+
+        public object[] ReadControllerParameters(PLC plc, uint axisID, uint loopID)
+    {
+        object[] varsin = {axisID, loopID};
+        object[] varsout = new object [1];
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadControllerParameters", varsin, out varsout);
+        return varsout;
+    }
+
     #endregion
 
     #region motion commands
-    public void MoveAbsolute(PLC plc, uint axisID, uint loopID, uint position, uint velocity)
+    public void MoveAbsolute(PLC plc, uint axisID, uint loopID, double position, double velocity)
     {
         object[] varsEnable = {axisID,loopID};
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",varsEnable);
@@ -167,7 +193,7 @@ public class NCAxis
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveAbsolute",vars);
     }
 
-    public void MoveRelative(PLC plc, uint axisID, uint loopID, uint position, uint velocity)
+    public void MoveRelative(PLC plc, uint axisID, uint loopID, double position, double velocity)
     {
         object[] varsEnable = {axisID,loopID};
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",varsEnable);
