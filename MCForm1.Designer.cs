@@ -4,36 +4,39 @@ namespace TwinCAT_ADS_MC;
 
 partial class MCForm1
 {
+
+    public Label amsLabel;
+    public Label localAMSLabel;
+    public Label portLabel;
     public TextBox userAMSIDText;
     public TextBox userPortText;
     public CheckBox localCheckBox;
+    public Label plcConnectedLabel;
+    public Label axisConnectedLabel;
     public Button connectButton;
+
     public Label axesNumLabel;
     public TextBox axesNumText;
     public Button axisConnectButton;
     public Button axesSetupButton;
 
-    public TextBox setPosText;
-    public TextBox readPosText;
-    public TextBox setVelText;
-    public TextBox readVelText;
-    public Label velocityLabel;
-    public Label positionLabel;
-    public Label setLabel;
-    public Label readLabel;
-    public Button executeButton;
-    public Label amsLabel;
-    public Label localAMSLabel;
-    public Label portLabel;
     public RadioButton moveAbsoluteRadio;
     public Label moveAbsoluteLabel;
     public RadioButton moveRelativeRadio;
     public Label moveRelativeLabel;
     public RadioButton moveHomeRadio;
     public Label moveHomeLabel;
-    public Label plcConnectedLabel;
-    public Label axisConnectedLabel;
 
+    public Label setLabel;
+    public Label readLabel;
+    public Label positionLabel;
+    public TextBox positionSetText;
+    public TextBox positionActualText;
+    public Label velocityLabel;
+    public TextBox velocitySetText;
+    public TextBox velocityActualText;
+    
+    public Button executeButton;
 
     private System.ComponentModel.IContainer components = null;
 
@@ -187,61 +190,39 @@ partial class MCForm1
         positionLabel.Text = "Position:";
         this.Controls.Add(positionLabel);
 
-        setPosText = new TextBox(); // set position text box
-        setPosText.Size = new Size(100,50);
-        setPosText.Location = new Point(150,250);
-        this.Controls.Add(setPosText);
+        positionSetText = new TextBox(); // set position text box
+        positionSetText.Size = new Size(100,50);
+        positionSetText.Location = new Point(150,250);
+        this.Controls.Add(positionSetText);
 
-        readPosText = new TextBox(); // actual read set position text box
-        readPosText.Size = new Size(75,50);
-        readPosText.Location = new Point(325,250);
-        readPosText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
-        readPosText.ReadOnly = true;
-        this.Controls.Add(readPosText);
-        
-        /*
-
-        newSetPos = new Button(); // new set position button
-        newSetPos.Size = new Size(80, 60);
-        newSetPos.Location = new Point(150, 85);
-        newSetPos.Text = "Set Position";
-        this.Controls.Add(newSetPos);
-        newSetPos.Click += new EventHandler(newSetPos_Click);
-
-        */
+        positionActualText = new TextBox(); // actual read set position text box
+        positionActualText.Size = new Size(75,50);
+        positionActualText.Location = new Point(325,250);
+        positionActualText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
+        positionActualText.ReadOnly = true;
+        this.Controls.Add(positionActualText);
 
         #endregion
 
         #region Velocity
 
-        positionLabel = new Label();
-        positionLabel.Size = new Size(60,20);
-        positionLabel.Location = new Point(20,300);
-        positionLabel.Text = "Velocity:";
-        this.Controls.Add(positionLabel);
+        velocityLabel = new Label();
+        velocityLabel.Size = new Size(60,20);
+        velocityLabel.Location = new Point(20,300);
+        velocityLabel.Text = "Velocity:";
+        this.Controls.Add(velocityLabel);
 
-        setVelText = new TextBox(); // set velocity text box
-        setVelText.Size = new Size(100,50);
-        setVelText.Location = new Point(150,300);
-        this.Controls.Add(setVelText);
+        velocitySetText = new TextBox(); // set velocity text box
+        velocitySetText.Size = new Size(100,50);
+        velocitySetText.Location = new Point(150,300);
+        this.Controls.Add(velocitySetText);
 
-        readVelText = new TextBox(); // actual read velocity text box
-        readVelText.Size = new Size(75,50);
-        readVelText.Location = new Point(325,300);
-        readVelText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
-        readVelText.ReadOnly = true;
-        this.Controls.Add(readVelText);
-
-        /*
-
-        newVelCmd = new Button(); // new set velocity command button
-        newVelCmd.Size = new Size(80, 60);
-        newVelCmd.Location = new Point(150, 160);
-        newVelCmd.Text = "Set Velocity";
-        this.Controls.Add(newVelCmd);
-        newVelCmd.Click += new EventHandler(newVelCmd_Click);
-
-        */
+        velocityActualText = new TextBox(); // actual read velocity text box
+        velocityActualText.Size = new Size(75,50);
+        velocityActualText.Location = new Point(325,300);
+        velocityActualText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
+        velocityActualText.ReadOnly = true;
+        this.Controls.Add(velocityActualText);
 
         #endregion
 

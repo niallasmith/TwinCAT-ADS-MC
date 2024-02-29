@@ -1430,6 +1430,9 @@ External Setpoint Generation:
 				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
+				<Task Id="6" Priority="30" CycleTime="2000000" AmsPort="351" DisableFpExceptions="true" AdtTasks="true">
+					<Name>VISU_TASK</Name>
+				</Task>
 			</Tasks>
 		</System>
 		<Motion>
@@ -1735,8 +1738,7 @@ External Setpoint Generation:
 							</Var>
 						</Vars>
 					</Encoder>
-					<Encoder Name="Enc2" EncId="130" EncType="6">
-						<EncPara MaxCount="#x0000ffff"/>
+					<Encoder Name="Enc2" EncId="130" EncType="1">
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
 							<Var>
@@ -1796,6 +1798,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -1959,8 +1962,7 @@ External Setpoint Generation:
 							</Var>
 						</Vars>
 					</Encoder>
-					<Encoder Name="Enc2" EncId="131" EncType="6">
-						<EncPara MaxCount="#x0000ffff"/>
+					<Encoder Name="Enc2" EncId="131" EncType="1">
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
 							<Var>
@@ -2020,6 +2022,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2183,8 +2186,7 @@ External Setpoint Generation:
 							</Var>
 						</Vars>
 					</Encoder>
-					<Encoder Name="Enc2" EncId="132" EncType="6">
-						<EncPara MaxCount="#x0000ffff"/>
+					<Encoder Name="Enc2" EncId="132" EncType="1">
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
 							<Var>
@@ -2244,6 +2246,7 @@ External Setpoint Generation:
 					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2349,7 +2352,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{73569637-AF5B-4FB2-BF7D-5E0CB6B8BB65}" Name="PLC-Project" PrjFilePath="PLC-Project\PLC-Project.plcproj" TmcFilePath="PLC-Project\PLC-Project.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC-Project\PLC-Project.tmc" TmcHash="{0F85850D-6E2B-4743-1D7E-9C076EF88B75}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC-Project\PLC-Project.tmc" TmcHash="{C46A8AFF-98A3-B8EB-084F-8352CB994505}">
 					<Name>PLC-Project Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2432,9 +2435,19 @@ External Setpoint Generation:
 							<Priority>20</Priority>
 							<CycleTime>10000000</CycleTime>
 						</Context>
+						<Context>
+							<Id>1</Id>
+							<Name>VISU_TASK</Name>
+							<ManualConfig>
+								<OTCID>#x02010060</OTCID>
+							</ManualConfig>
+							<Priority>30</Priority>
+							<CycleTime>200000000</CycleTime>
+						</Context>
 					</Contexts>
 					<TaskPouOids>
 						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+						<TaskPouOid Prio="30" OTCID="#x08502002"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>

@@ -1,0 +1,20 @@
+Id;Default
+600;%4.3f
+13;%i
+301;%s
+702;Active control loop:
+64;Actual Position
+16;Actual velocity
+0;Axis 1
+151;Axis 2
+802;Axis 3
+955;Axis 4
+110;Error
+199;Error ID
+558;In target position
+541;In target position:
+510;Moving
+389;Moving:
+537;Reset
+12;Set Position
+587;Standstill:

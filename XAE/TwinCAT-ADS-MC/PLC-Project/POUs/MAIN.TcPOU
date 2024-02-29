@@ -3,11 +3,8 @@
   <POU Name="MAIN" Id="{f070e0eb-d52d-4666-8d92-3578df9d3e28}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	nState: UINT := 0;
-	//Axis1 : ARRAY [0..2] OF AXIS_REF;
+	//nState: UINT := 0;
 	Axis : ARRAY [0..3] OF ARRAY [0..1] OF AXIS_REF;
-	//Axis1 : AXIS_REF;
-	//Axis1B : AXIS_REF;
 	MoveAbsolute : MC_MoveAbsolute;
 	MoveRelative : MC_MoveRelative;
 	WriteParameter : MC_WriteParameter;
@@ -20,6 +17,10 @@ VAR
 	SetControlLoop : MC_SelectControlLoop;
 	ReadBoolParameter : MC_ReadBoolParameter;
 	WriteBoolParameter : MC_WriteBoolParameter;
+	Axis1LoopID : UINT;
+	Axis2LoopID : UINT;
+	Axis3LoopID : UINT;
+	Axis4LoopID : UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -30,15 +31,20 @@ END_VAR
 
 Axis[0][0](); // incremental encoder axis 1
 Axis[0][1](); // absolute encoder axis 1
+Axis1LoopID := Axis[0][0].NcToPlc.ActiveControlLoopIndex;
 
 Axis[1][0](); // incremental encoder axis 2
 Axis[1][1](); // absolute encoder axis 2
+Axis2LoopID := Axis[1][0].NcToPlc.ActiveControlLoopIndex;
 
 Axis[2][0](); // incremental encoder axis 3
 Axis[2][1](); // absolute encoder axis 3
+Axis3LoopID := Axis[2][0].NcToPlc.ActiveControlLoopIndex;
 
 Axis[3][0](); // incremental encoder axis 4
 Axis[3][1](); // absolute encoder axis 4
+Axis4LoopID := Axis[3][0].NcToPlc.ActiveControlLoopIndex;
+
 
 
 //E_NcEncoderType.NcEncoderType_Simulation
@@ -89,13 +95,18 @@ Axis[3][1](); // absolute encoder axis 4
       <LineId Id="157" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="158" Count="0" />
+      <LineId Id="198" Count="0" />
       <LineId Id="164" Count="0" />
       <LineId Id="159" Count="1" />
+      <LineId Id="199" Count="0" />
       <LineId Id="165" Count="0" />
       <LineId Id="161" Count="1" />
+      <LineId Id="200" Count="0" />
       <LineId Id="166" Count="0" />
       <LineId Id="163" Count="0" />
       <LineId Id="167" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="194" Count="0" />
       <LineId Id="115" Count="0" />
       <LineId Id="77" Count="0" />
       <LineId Id="76" Count="0" />

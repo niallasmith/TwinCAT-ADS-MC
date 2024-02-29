@@ -9,16 +9,11 @@ public partial class MCForm1
 {
     public PLC myPLC;
     public NCAxis ncAxis;
-
-    
     public string AMSID;
     public int Port;
-
     public uint axisID = 0;
-
     public ushort readPosValue;
     public ushort readVelValue;
-    
     public SetupForm1 SetupForm;
 
     private void connectButton_Click(object sender, EventArgs e) // initialise button pressed
@@ -147,8 +142,8 @@ public partial class MCForm1
         }
         
         //object[] vars = ncAxis.ReadAxisParameters(myPLC);
-        readPosText.Text = Convert.ToString(readPosValue);
-        readVelText.Text = Convert.ToString(readVelValue);
+        positionActualText.Text = Convert.ToString(readPosValue);
+        velocityActualText.Text = Convert.ToString(readVelValue);
     }
 
     private void localCheckBox_Click(object sender, EventArgs e) // check box clicked
@@ -170,20 +165,20 @@ public partial class MCForm1
 
     private void moveAbsoluteRadio_Click(object sender, EventArgs e)
     {
-        setPosText.ReadOnly = false;
-        setVelText.ReadOnly = false;
+        positionSetText.ReadOnly = false;
+        velocitySetText.ReadOnly = false;
     } 
 
     private void moveRelativeRadio_Click(object sender, EventArgs e)
     {
-        setPosText.ReadOnly = false;
-        setVelText.ReadOnly = false;
+        positionSetText.ReadOnly = false;
+        velocitySetText.ReadOnly = false;
     } 
 
     private void moveHomeRadio_Click(object sender, EventArgs e)
     {
-        setPosText.ReadOnly = true;
-        setVelText.ReadOnly = false;
+        positionSetText.ReadOnly = true;
+        velocitySetText.ReadOnly = false;
     } 
 
     private void executeButton_Click(object sender, EventArgs e)
@@ -211,16 +206,16 @@ public partial class MCForm1
 
         if (moveAbsoluteRadio.Checked)
         {
-            ncAxis.MoveAbsolute(myPLC, axisID, loopID, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text));
+            ncAxis.MoveAbsolute(myPLC, axisID, loopID, Convert.ToDouble(positionSetText.Text), Convert.ToDouble(velocitySetText.Text));
         } 
         else if (moveRelativeRadio.Checked) 
         {
-            ncAxis.MoveRelative(myPLC, axisID, loopID, Convert.ToUInt16(setPosText.Text), Convert.ToUInt16(setVelText.Text));
+            ncAxis.MoveRelative(myPLC, axisID, loopID, Convert.ToDouble(positionSetText.Text), Convert.ToDouble(velocitySetText.Text));
         }
         else
         {
-            setPosText.Text = "Error";
-            setVelText.Text = "Error";
+            positionSetText.Text = "Error";
+            velocitySetText.Text = "Error";
         }
 
     }
@@ -304,9 +299,4 @@ public partial class MCForm1
         }
     }
 
-    private void SetupForm1_Closed(object sender, EventArgs e)
-    {
-        // push changes to NC axis 
-        System.Console.WriteLine("form closed");
-    }
 }

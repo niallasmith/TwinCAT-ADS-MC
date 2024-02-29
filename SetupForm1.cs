@@ -2,8 +2,6 @@ using TwinCAT.PlcOpen;
 
 namespace TwinCAT_ADS_MC;
 
-//partial class MCForm1
-//{
 public partial class SetupForm1 : Form
 {
     

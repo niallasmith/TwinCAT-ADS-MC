@@ -112,16 +112,9 @@ partial class SetupForm1
     private void FormDesignSetup()
     {
         System.Windows.Forms.Timer timer2 = new System.Windows.Forms.Timer(); // setup new timer for refreshing form data
-        timer2.Interval=1000; // 1 second
+        timer2.Interval = 1000; // 1 second
         timer2.Tick += new EventHandler(timer2_Tick);
         timer2.Start();
-
-        setAxisParamsButton = new Button();
-        setAxisParamsButton.Size = new Size(100,40);
-        setAxisParamsButton.Location = new Point(140,325);
-        setAxisParamsButton.Text = "Set Axis Params";
-        this.Controls.Add(setAxisParamsButton);
-        setAxisParamsButton.Click += new EventHandler(setAxisParams_Click);
 
         #region axis parameters
 
@@ -145,6 +138,13 @@ partial class SetupForm1
         axisParamsActualLabel.Text = "Actual";
         //axisParamsActualLabel.Font = new Font(FontFamily.GenericSansSerif, 16.0F, FontStyle.Bold);
         this.Controls.Add(axisParamsActualLabel);
+
+        setAxisParamsButton = new Button();
+        setAxisParamsButton.Size = new Size(100,40);
+        setAxisParamsButton.Location = new Point(140,325);
+        setAxisParamsButton.Text = "Set Axis Params";
+        this.Controls.Add(setAxisParamsButton);
+        setAxisParamsButton.Click += new EventHandler(setAxisParams_Click);
 
         #region axis set
 
@@ -357,6 +357,13 @@ partial class SetupForm1
         encoderParamsReadLabel.Text = "Actual";
         this.Controls.Add(encoderParamsReadLabel);
 
+        encoderParamsSetButton = new Button();
+        encoderParamsSetButton.Size = new Size(100,40);
+        encoderParamsSetButton.Location = new Point(440,325);
+        encoderParamsSetButton.Text = "Set Encoder Params";
+        this.Controls.Add(encoderParamsSetButton);
+        encoderParamsSetButton.Click += new EventHandler(encoderParamsSetButton_Click);
+
         #region encoder selection radio buttons
 
         controlLoop1Radio = new RadioButton();
@@ -449,12 +456,7 @@ partial class SetupForm1
         encoderMaskText.Location = new Point(420,290);
         this.Controls.Add(encoderMaskText);
 
-        encoderParamsSetButton = new Button();
-        encoderParamsSetButton.Size = new Size(100,40);
-        encoderParamsSetButton.Location = new Point(440,325);
-        encoderParamsSetButton.Text = "Set Encoder Params";
-        this.Controls.Add(encoderParamsSetButton);
-        encoderParamsSetButton.Click += new EventHandler(encoderParamsSetButton_Click);
+        
 
         #endregion 
 
