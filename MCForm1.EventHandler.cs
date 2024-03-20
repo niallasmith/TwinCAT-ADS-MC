@@ -7,14 +7,18 @@ namespace TwinCAT_ADS_MC;
 
 public partial class MCForm1
 {
-    public PLC myPLC;
-    public NCAxis ncAxis;
-    public string AMSID;
+
+    // myPLC, ncAxis, AMSID and SetupForm1 set as nullable. is this a mistake? they can all be nullable and there should not be an issue. 
+    // got some warning about nullable properties when exiting the MCForm1 constructor. given that MCForm1 is the primary code that runs, when exiting the constructor i dont think
+    // we care whether they are null or not, so i set them as nullable
+    public PLC? myPLC; 
+    public NCAxis? ncAxis; // set as nullable
+    public string? AMSID; // set as nullable
     public int Port;
     public uint axisID = 0; // initialise axis ID to 0 (ID 0 = axis 1)
     public ushort readPosValue;
     public ushort readVelValue;
-    public SetupForm1 SetupForm;
+    public SetupForm1? SetupForm; // set as nullable
 
     private void connectButton_Click(object sender, EventArgs e) // PLC connect button pressed
     {
@@ -44,6 +48,12 @@ public partial class MCForm1
         catch
         {
             MessageBox.Show("Invalid port"); // if it isn't (or is null) then display message box and return early from connect function
+            return;
+        }
+
+        if (AMSID is null) // ensure AMSID is not null
+        {
+            MessageBox.Show("AMS Net ID is null");
             return;
         }
 
@@ -138,7 +148,7 @@ public partial class MCForm1
 
     private void timer1_Tick(object sender, EventArgs e) // timer interval triggered
     {
-        if (ncAxis is null) // if ncAxis is null e.g. PLC has not yet been connected
+        if (ncAxis is null || myPLC is null) // if ncAxis is null e.g. PLC has not yet been connected
         {
             return; // return early and do not try reading parameters
         }
@@ -160,6 +170,12 @@ public partial class MCForm1
 
     private void axesSetupButton_Click(object sender, EventArgs e) // axis setup button clicked
     {
+        if (myPLC is null || ncAxis is null)
+        {
+            MessageBox.Show("PLC or NCAxis is null");
+            return;
+        }
+
         SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axisID); // create setup form
         SetupForm.ShowDialog(); // display setup form
     }
@@ -184,7 +200,8 @@ public partial class MCForm1
 
     private void executeButton_Click(object sender, EventArgs e)
     {
-        if (ncAxis is null) // return if ncAxis has not been setup yet
+
+        if (myPLC is null || ncAxis is null) // return if ncAxis has not been setup yet
         {
             MessageBox.Show("ncAxis is null, ensure initialistion");
             return;
@@ -274,6 +291,12 @@ public partial class MCForm1
 
     private void axisConnectButton_Click(object sender, EventArgs e) // axis connect button pressed
     {
+        if (myPLC is null)
+        {
+            MessageBox.Show("PLC is null");
+            return;
+        }
+
         try
         {
             // try convert user inputted data into int
