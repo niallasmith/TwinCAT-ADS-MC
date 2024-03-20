@@ -1554,8 +1554,8 @@ External Setpoint Generation:
 					<AxisPara>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
-					<Encoder Name="Enc" EncType="4">
-						<EncPara MaxCount="#x0000ffff">
+					<Encoder Name="Enc" EncType="1">
+						<EncPara>
 							<Inc RefSoftSyncMask="#x0000ffff"/>
 						</EncPara>
 						<Vars VarGrpType="1">
@@ -1671,7 +1671,7 @@ External Setpoint Generation:
 							</Var>
 						</Vars>
 					</Encoder>
-					<Drive Name="Drive" DrvType="24">
+					<Drive Name="Drive" DrvType="5">
 						<DrvPara>
 							<Analog TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
@@ -2452,7 +2452,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{73569637-AF5B-4FB2-BF7D-5E0CB6B8BB65}" Name="PLC-Project" PrjFilePath="PLC-Project\PLC-Project.plcproj" TmcFilePath="PLC-Project\PLC-Project.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC-Project\PLC-Project.tmc" TmcHash="{6666166F-B9C1-AF13-E343-09A8E77A994B}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC-Project\PLC-Project.tmc" TmcHash="{6B82516F-2A05-E3FB-EAB4-D57CAFA53311}">
 					<Name>PLC-Project Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">

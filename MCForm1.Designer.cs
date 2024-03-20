@@ -210,7 +210,7 @@ partial class MCForm1
         this.Controls.Add(positionSetText);
 
         positionActualText = new TextBox(); // actual read set position text box
-        positionActualText.Size = new Size(75,50);
+        positionActualText.Size = new Size(125,50);
         positionActualText.Location = new Point(325,250);
         positionActualText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
         positionActualText.ReadOnly = true;
@@ -233,7 +233,7 @@ partial class MCForm1
         this.Controls.Add(velocitySetText);
 
         velocityActualText = new TextBox(); // actual read velocity text box
-        velocityActualText.Size = new Size(75,50);
+        velocityActualText.Size = new Size(125,50);
         velocityActualText.Location = new Point(325,300);
         velocityActualText.Font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Italic);
         velocityActualText.ReadOnly = true;
