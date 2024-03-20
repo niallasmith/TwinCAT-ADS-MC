@@ -55,6 +55,31 @@ Main.MoveAbsolute(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
 RETURN;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_MoveHome" Id="{8f52ae3d-bfdd-417d-be11-b431621ca776}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_MoveHome : BOOL
+VAR_INPUT
+	axisID : UINT;
+	loopID : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Main.AxisPower(Axis:=Main.Axis[axisID][loopID],Enable:=TRUE,Enable_Positive:=TRUE,Enable_Negative:=TRUE); 
+
+WHILE Main.Axis[axisID][loopID].Status.Operational = FALSE DO
+	Main.MoveHome(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+END_WHILE
+
+Main.MoveHome(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+Main.Reset(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+
+Main.MoveHome(Axis:=Main.Axis[axisID][loopID],Position:=0,HomingMode:=MC_DefaultHoming);
+
+Main.MoveHome(Axis:=Main.Axis[axisID][loopID],Execute:=TRUE);
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_MoveRelative" Id="{49a2a512-3e94-4879-b314-10353ec76639}">
       <Declaration><![CDATA[{attribute 'TcRpcEnable'}
 METHOD M_MoveRelative : BOOL
@@ -351,6 +376,25 @@ END_WHILE
 RETURN;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_SetActualPosition" Id="{a4311ff3-a2e1-4927-90e8-335a76d1333b}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_SetActualPosition : BOOL
+VAR_INPUT
+	axisID : UINT;
+	loopID : UINT;
+	position : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Main.SetActualPosition(Axis:=Main.Axis[axisID][loopID],Position:=position,Mode:=FALSE,Execute:=FALSE);
+Main.SetActualPosition(Axis:=Main.Axis[axisID][loopID],Execute:=TRUE);
+WHILE (Main.SetActualPosition.Done=FALSE) DO
+	Main.SetActualPosition(Axis:=Main.Axis[axisID][loopID],Execute:=FALSE);
+END_WHILE
+
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_WriteAxisParameters" Id="{66fe626f-3ffa-44ff-b51a-f7cf0d645e56}">
       <Declaration><![CDATA[{attribute 'TcRpcEnable'}
 METHOD M_WriteAxisParameters : BOOL
@@ -576,6 +620,14 @@ RETURN;]]></ST>
       <LineId Id="28" Count="0" />
       <LineId Id="24" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Functions.M_MoveHome">
+      <LineId Id="10" Count="8" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Functions.M_MoveRelative">
       <LineId Id="13" Count="7" />
       <LineId Id="25" Count="1" />
@@ -677,6 +729,10 @@ RETURN;]]></ST>
       <LineId Id="27" Count="0" />
       <LineId Id="46" Count="0" />
       <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_SetActualPosition">
+      <LineId Id="9" Count="5" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Functions.M_WriteAxisParameters">
       <LineId Id="33" Count="0" />

@@ -11,6 +11,8 @@ partial class MCForm1
     public Label amsLabel;
     public Label localAMSLabel;
     public Label portLabel;
+    public CheckBox port851CheckBox;
+    public Label port851Label;
     public TextBox userAMSIDText;
     public TextBox userPortText;
     public CheckBox localCheckBox;
@@ -121,6 +123,22 @@ partial class MCForm1
         portLabel.Location = new Point(225,30);
         portLabel.Text = "Port:";
         this.Controls.Add(portLabel);
+
+        #endregion
+
+        #region port 851 checkbox
+
+        port851CheckBox = new CheckBox(); // checkbox
+        port851CheckBox.Size = new Size(20,20);
+        port851CheckBox.Location = new Point(330,50);
+        this.Controls.Add(port851CheckBox);
+        port851CheckBox.Click += new EventHandler(port851CheckBox_Click);
+
+        port851Label = new Label();
+        port851Label.Size = new Size(80,20);
+        port851Label.Location = new Point(275,50);
+        port851Label.Text = "Port 851?";
+        this.Controls.Add(port851Label);
 
         #endregion
 

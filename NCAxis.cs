@@ -133,6 +133,13 @@ public class NCAxis
         // does not return anything
     }
 
+    public void SetActualPosition(PLC plc, object[] actualPositionInputArray)
+    {
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_SetActualPosition", actualPositionInputArray); // object variable is passed to method in PLC
+        // does not return anything
+    }
+
+
     public void WriteEncoderParameters(PLC plc, object[] encoderInputArray)
     {
         plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteEncoderParameters", encoderInputArray); // object variable is passed to method in PLC
@@ -247,6 +254,14 @@ public class NCAxis
     }
 
     // TODO: add move home function
+
+    public void MoveHome(PLC plc, uint axisID, uint loopID) // TODO: make this a object array that is passed to the function
+    {
+        object[] enableInputArray = {axisID,loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",enableInputArray); // call enable axis method
+        object[] homeInputArray = {axisID,loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveHome",homeInputArray); // call move relative method 
+    }
 
     #endregion
     

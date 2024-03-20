@@ -162,9 +162,24 @@ public partial class MCForm1
         if (localCheckBox.Checked) // if the checkbox is now checked
         {
             userAMSIDText.ReadOnly = true; // make AMS ID box read only
+            userAMSIDText.Text = Convert.ToString(AmsNetId.Local);
 
         } else {
             userAMSIDText.ReadOnly = false; // make it un- read only
+            userAMSIDText.Text = "";
+        }
+    }
+
+    private void port851CheckBox_Click(object sender, EventArgs e)
+    {
+        if (port851CheckBox.Checked) // if the checkbox is now checked
+        {
+            userPortText.ReadOnly = true; // make AMS ID box read only
+            userPortText.Text = "851";
+
+        } else {
+            userPortText.ReadOnly = false; // make it un- read only
+            userPortText.Text = "";
         }
     }
 
@@ -230,6 +245,10 @@ public partial class MCForm1
         {
             ncAxis.MoveRelative(myPLC, axisID, loopID, Convert.ToDouble(positionSetText.Text), Convert.ToDouble(velocitySetText.Text));
         }
+        else if (moveHomeRadio.Checked)
+        {
+            ncAxis.MoveHome(myPLC,axisID,loopID);
+        } 
         else
         {
             positionSetText.Text = "Error";

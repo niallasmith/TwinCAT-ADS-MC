@@ -7,6 +7,7 @@ VAR
 	Axis : ARRAY [0..3] OF ARRAY [0..1] OF AXIS_REF;
 	MoveAbsolute : MC_MoveAbsolute;
 	MoveRelative : MC_MoveRelative;
+	MoveHome : MC_Home;
 	WriteParameter : MC_WriteParameter;
 	ReadParameter : MC_ReadParameter;
 	AxisPower : MC_Power;
@@ -17,10 +18,12 @@ VAR
 	SetControlLoop : MC_SelectControlLoop;
 	ReadBoolParameter : MC_ReadBoolParameter;
 	WriteBoolParameter : MC_WriteBoolParameter;
+	SetActualPosition : MC_SetPosition;
 	Axis1LoopID : UINT;
 	Axis2LoopID : UINT;
 	Axis3LoopID : UINT;
 	Axis4LoopID : UINT;
+	activeAxisLoopID : ARRAY [0..3] OF UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -31,19 +34,19 @@ END_VAR
 
 Axis[0][0](); // incremental encoder axis 1
 Axis[0][1](); // absolute encoder axis 1
-Axis1LoopID := Axis[0][0].NcToPlc.ActiveControlLoopIndex;
+activeAxisLoopID[0] := Axis[0][0].NcToPlc.ActiveControlLoopIndex;
 
 Axis[1][0](); // incremental encoder axis 2
 Axis[1][1](); // absolute encoder axis 2
-Axis2LoopID := Axis[1][0].NcToPlc.ActiveControlLoopIndex;
+activeAxisLoopID[1] := Axis[1][0].NcToPlc.ActiveControlLoopIndex;
 
 Axis[2][0](); // incremental encoder axis 3
 Axis[2][1](); // absolute encoder axis 3
-Axis3LoopID := Axis[2][0].NcToPlc.ActiveControlLoopIndex;
+activeAxisLoopID[2] := Axis[2][0].NcToPlc.ActiveControlLoopIndex;
 
 Axis[3][0](); // incremental encoder axis 4
 Axis[3][1](); // absolute encoder axis 4
-Axis4LoopID := Axis[3][0].NcToPlc.ActiveControlLoopIndex;
+activeAxisLoopID[3] := Axis[3][0].NcToPlc.ActiveControlLoopIndex;
 
 
 

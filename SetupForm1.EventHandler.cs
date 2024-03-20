@@ -347,14 +347,36 @@ partial class SetupForm1
             }
             catch
             {
+                MessageBox.Show("kv parameter user value error");
                 return;
             }
         }
 
         #endregion
 
-        object[] controllerInputArray = {axisID, loopID,kvparam}; // put all handled parameters into an object array
+        object[] controllerInputArray = {axisID, loopID, kvparam}; // put all handled parameters into an object array
         ncAxis.WriteControllerParameters(myPLC, controllerInputArray); // call write controller parameters method on the PLC, pass it the parameter object array
     }
 
+    private void setActualPosition_Click(object sender, EventArgs e)
+    {
+        double actualPosition;
+
+        // value handling
+
+        try
+        {
+            actualPosition = Convert.ToDouble(setActualPositionTextBox.Text);
+        } 
+        catch 
+        {
+            MessageBox.Show("set actual position user value error");
+            return;
+        }
+
+        
+
+        object[] actualPositionArray = {axisID, loopID, actualPosition};
+        ncAxis.SetActualPosition(myPLC,actualPositionArray);
+    }
 }
