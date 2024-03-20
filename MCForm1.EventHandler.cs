@@ -1,4 +1,4 @@
-// Event handler for handling Form1 events e.g. buttons pressed etc.
+// Event handler for handling MCForm1 events e.g. buttons pressed etc.
 
 using Microsoft.VisualBasic;
 using TwinCAT.Ads;
@@ -11,56 +11,58 @@ public partial class MCForm1
     public NCAxis ncAxis;
     public string AMSID;
     public int Port;
-    public uint axisID = 0;
+    public uint axisID = 0; // initialise axis ID to 0 (ID 0 = axis 1)
     public ushort readPosValue;
     public ushort readVelValue;
     public SetupForm1 SetupForm;
 
-    private void connectButton_Click(object sender, EventArgs e) // initialise button pressed
+    private void connectButton_Click(object sender, EventArgs e) // PLC connect button pressed
     {
 
-        if (localCheckBox.Checked)
+        if (localCheckBox.Checked) // if user has selected they want to connect to a local PLC
         {
             try
             {
-                AMSID = Convert.ToString(AmsNetId.Local);
+                AMSID = Convert.ToString(AmsNetId.Local); // try convert local AMS net ID to string
             }
             catch
             {
-                return;
+                MessageBox.Show("Invalid local AMS net ID");
+                return; // if cannot, return and return early from connect function
             }
             
         } 
-        else
+        else // if user has NOT selected a local PLC
         {
-            AMSID = userAMSIDText.Text;
+            AMSID = userAMSIDText.Text; // AMS ID is the text that the user entered
         }
 
         try
         {
-            int value = Convert.ToInt32(userPortText.Text);
+            Port = Convert.ToInt32(userPortText.Text); // try convert the port the user entered to Int32
         }
         catch
         {
-            MessageBox.Show("Invalid port");
+            MessageBox.Show("Invalid port"); // if it isn't (or is null) then display message box and return early from connect function
             return;
         }
 
-        Port = Convert.ToInt32(userPortText.Text);
+        myPLC = new PLC(AMSID,Port); // create new PLC object named myPLC. see PLC.cs for code
 
-        myPLC = new PLC(AMSID,Port);
-
-        if (myPLC.IsStateRun())
+        if (myPLC.IsStateRun()) // if connection was successful, then PLC will be in run state
         {
-            plcConnectedLabel.Text = "Connected";
+            plcConnectedLabel.Text = "Connected"; // if so, change text below connect button
         }
         else
         {
-            MessageBox.Show("PLC not in Run state, probably because of an incorrect Port");
+            MessageBox.Show("PLC not in Run state or failed to connect"); // if not, display message box
             plcConnectedLabel.Text = "Disonnected";
         }
         
     }
+
+    // legacy code that no longer applied with the new approach to ADS communication
+    // keeping it in case in the future it is useful
 
     /*
     
@@ -136,48 +138,47 @@ public partial class MCForm1
 
     private void timer1_Tick(object sender, EventArgs e) // timer interval triggered
     {
-        if (ncAxis is null)
+        if (ncAxis is null) // if ncAxis is null e.g. PLC has not yet been connected
         {
-            return;
+            return; // return early and do not try reading parameters
         }
         
-        //object[] vars = ncAxis.ReadAxisParameters(myPLC);
-        positionActualText.Text = Convert.ToString(readPosValue);
-        velocityActualText.Text = Convert.ToString(readVelValue);
+        object[] motionOutputArray = (object[])ncAxis.ReadAxisMotion(myPLC,axisID);
+        RefreshMotionData(motionOutputArray);
     }
 
     private void localCheckBox_Click(object sender, EventArgs e) // check box clicked
     {
-        if (localCheckBox.Checked)
+        if (localCheckBox.Checked) // if the checkbox is now checked
         {
-            userAMSIDText.ReadOnly = true;
+            userAMSIDText.ReadOnly = true; // make AMS ID box read only
 
         } else {
-            userAMSIDText.ReadOnly = false;
+            userAMSIDText.ReadOnly = false; // make it un- read only
         }
     }
 
-    private void axesSetupButton_Click(object sender, EventArgs e) 
+    private void axesSetupButton_Click(object sender, EventArgs e) // axis setup button clicked
     {
-        SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axisID);
-        SetupForm.ShowDialog();
+        SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axisID); // create setup form
+        SetupForm.ShowDialog(); // display setup form
     }
 
-    private void moveAbsoluteRadio_Click(object sender, EventArgs e)
+    private void moveAbsoluteRadio_Click(object sender, EventArgs e) // move absolute radio button clicked
     {
         positionSetText.ReadOnly = false;
         velocitySetText.ReadOnly = false;
     } 
 
-    private void moveRelativeRadio_Click(object sender, EventArgs e)
+    private void moveRelativeRadio_Click(object sender, EventArgs e) // move relative radio button clicked
     {
         positionSetText.ReadOnly = false;
         velocitySetText.ReadOnly = false;
     } 
 
-    private void moveHomeRadio_Click(object sender, EventArgs e)
+    private void moveHomeRadio_Click(object sender, EventArgs e) // move home radio button clicked
     {
-        positionSetText.ReadOnly = true;
+        positionSetText.ReadOnly = true; // obviously position is implied if homing, so make it read only for clarity's sake
         velocitySetText.ReadOnly = false;
     } 
 
@@ -219,6 +220,9 @@ public partial class MCForm1
         }
 
     }
+
+    // legacy code that no longer applied with the new approach to ADS communication
+    // keeping it in case in the future it is useful
 
     /*
     private void WriteExecute()
@@ -268,34 +272,35 @@ public partial class MCForm1
     }
     */
 
-    private void axisConnectButton_Click(object sender, EventArgs e)
+    private void axisConnectButton_Click(object sender, EventArgs e) // axis connect button pressed
     {
         try
         {
-            axisID = (uint)Convert.ToUInt16(axesNumText.Text) - 1;
-            if(axisID > 3 || axisID < 0)
+            // try convert user inputted data into int
+            axisID = (uint)Convert.ToUInt16(axesNumText.Text) - 1; // axis ID in Beckhoff is an array index between 0..3, therefore if user types in axis 1, this is axis ID 0
+            if(axisID > 3 || axisID < 0) // if not in correct range 0..3
             {
                 MessageBox.Show("Axes num invalid");
-                return;
+                return; // return early, do not try to connect
             }
         }
         catch
         {
-            MessageBox.Show("Axes num invalid");
+            MessageBox.Show("Axes num invalid"); // if user input cannot be converted to int (a char or is null), return error message and return early from function
             return;
         }
 
         try
         {
-            ncAxis = new NCAxis(myPLC, axisID);
-            axisConnectedLabel.Text = "Connected";
+            ncAxis = new NCAxis(myPLC, axisID); // if successful, create new ncAxis object related to axis
+            axisConnectedLabel.Text = "Connected"; // change label text
         }
         catch
         {
-            MessageBox.Show("Axis not connected");
-            axisConnectedLabel.Text = "Disconnected";
-            axesNumText.Text = "1";
-            return;
+            MessageBox.Show("Axis not connected"); // if error occurs, display message
+            axisConnectedLabel.Text = "Disconnected"; // change label text
+            axesNumText.Text = "1"; // reset axis num text to a correct value
+            return; // return from function
         }
     }
 

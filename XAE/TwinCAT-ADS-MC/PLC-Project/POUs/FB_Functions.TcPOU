@@ -100,6 +100,22 @@ END_VAR
 RETURN;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_ReadAxisMotion" Id="{3c2f956c-5539-47d9-960d-5322df1e5989}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable'}
+METHOD M_ReadAxisMotion : LREAL
+VAR_INPUT
+	axisID : UINT;
+END_VAR
+VAR_OUTPUT
+	position : LREAL;
+	velocity : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[position := Main.Axis[axisID][0].NcToPlc.ActPos;
+
+velocity := MAIN.Axis[axisID][0].NcToPlc.ActVelo;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_ReadAxisParameters" Id="{b4b35217-25df-4f47-ab66-df6486a56b0b}">
       <Declaration><![CDATA[{attribute 'TcRpcEnable'}
 METHOD M_ReadAxisParameters : LREAL
@@ -571,6 +587,11 @@ RETURN;]]></ST>
       <LineId Id="5" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Functions.M_ReadAxisMotion">
+      <LineId Id="5" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="FB_Functions.M_ReadAxisParameters">
       <LineId Id="17" Count="1" />

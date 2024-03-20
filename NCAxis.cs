@@ -1,13 +1,17 @@
+// code that implements motion commands, and reading/writing data
+
 using TwinCAT.PlcOpen;
 using TwinCAT.Ads;
 using System.Net.Sockets;
 using System.DirectoryServices;
 using System.Reflection.Metadata.Ecma335;
+using System.Buffers;
 
 namespace TwinCAT_ADS_MC;
 
 public class NCAxis
 {
+    // variables only used if using variable handle approach, not currently used
     /*
     public uint fpositionHandle;  // handles for PLC global variables
     public uint fvelocityHandle;
@@ -18,6 +22,7 @@ public class NCAxis
     public uint returnMethodHandle;
     */
     
+    // private Axis ID. this is not used
     private uint _axisID;
     public uint AxisID
     {
@@ -29,6 +34,9 @@ public class NCAxis
     {
         //UpdateAxisInstance(plc, axisID);
     }
+
+    // legacy code that no longer applied with the new approach to ADS communication
+    // keeping it in case in the future it is useful
 
     /*
 
@@ -112,94 +120,133 @@ public class NCAxis
 
     */
 
-    #region write / set data
-    public void WriteAxisParameters(PLC plc, object[] vars)
+    #region write data
+    public void WriteAxisParameters(PLC plc, object[] axisInputArray)
     {
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteAxisParameters", vars);
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteAxisParameters", axisInputArray); // object variable is passed to method in PLC
+        // does not return anything
     }
 
-    public void SetActiveControlLoop(PLC plc, uint axisID, uint loopID)
+    public void SetActiveControlLoop(PLC plc, object[] loopInputArray)
     {
-        object[] vars = {axisID, loopID};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_SetActiveEncoder", vars);
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_SetActiveEncoder", loopInputArray); // object variable is passed to method in PLC
+        // does not return anything
     }
 
-    public void WriteEncoderParameters(PLC plc,object[] vars)
+    public void WriteEncoderParameters(PLC plc, object[] encoderInputArray)
     {
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteEncoderParameters", vars);
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteEncoderParameters", encoderInputArray); // object variable is passed to method in PLC
+        // does not return anything
     }
 
-    public void WriteControllerParameters(PLC plc, object[] vars)
+    public void WriteControllerParameters(PLC plc, object[] controllerInputArray)
     {
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteControllerParameters", vars);
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteControllerParameters", controllerInputArray); // object variable is passed to method in PLC
+        // does not return anything
     }
 
-    public void WriteDriveParameters(PLC plc, object[] vars)
+    public void WriteDriveParameters(PLC plc, object[] driveInputArray)
     {
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteDriveParameters", vars);
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_WriteDriveParameters", driveInputArray); // object variable is passed to method in PLC
+        // does not return anything
     }
 
     #endregion
 
     #region read data
 
+    public object ReadAxisMotion(PLC plc, uint axisID)
+    {
+        object[] motionInputArray = {axisID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadAxisMotion", motionInputArray, out object[]? motionOutputArray); // object variable is read from the PLC
+
+        if (motionOutputArray is null){ // if method return object is null, return an empty object
+            object[] test = new object[0]; // empty object
+            return test;
+        }
+        return motionOutputArray; // else if not null, return data
+    }
+
     public object ReadAxisParameters(PLC plc, uint axisID, uint loopID)
     {
-        object[] varsin = {axisID,loopID};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadAxisParameters", varsin, out object[] vars);
-        return vars;
+        object[] axisInputArray = {axisID,loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadAxisParameters", axisInputArray, out object[]? axisOutputArray); // object variable is read from the PLC
+
+        if (axisOutputArray is null){ // if method return object is null, return an empty object
+            object[] test = new object[0]; // empty object
+            return test;
+        }
+        return axisOutputArray; // else if not null, return data
     }
 
     public object[] ReadEncoderParams(PLC plc, uint axisID, uint loopID)
     {
-        object[] vars = new object[5];
-        object[] varsin = {axisID, loopID};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadEncoderParameters", varsin, out vars);
-        return vars;
+        object[] encoderInputArray = {axisID, loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadEncoderParameters", encoderInputArray, out object[]? encoderOutputArray); // object variable is read from the PLC
+        
+        if (encoderOutputArray is null){
+            object[] emptyObject = new object[0]; // empty object
+            return emptyObject;
+        }
+        return encoderOutputArray;
     }
 
     public object[] ReadActiveLoop(PLC plc, uint axisID)
     {
-        object[] vars = new object[1];
-        object[] varsin = {axisID};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadActiveLoop", varsin, out vars);
-        return vars;
+        object[] loopInputArray = {axisID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadActiveLoop", loopInputArray, out object[]? loopOutputArray); // object variable is read from the PLC
+        
+        if (loopOutputArray is null){
+            object[] emptyObject = new object[0];
+            return emptyObject;
+        }
+        return loopOutputArray;
     }
 
     public object[] ReadDriveParameters(PLC plc, uint axisID, uint loopID)
     {
-        object[] varsin = {axisID, loopID};
-        object[] varsout = new object [2];
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadDriveParameters", varsin, out varsout);
-        return varsout;
+        object[] driveInputArray = {axisID, loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadDriveParameters", driveInputArray, out object[]? driveOutputArray ); // object variable is read from the PLC
+        
+        if (driveOutputArray is null){
+            object[] emptyObject = new object[0];
+            return emptyObject;
+        }
+        return driveOutputArray;
     }
 
         public object[] ReadControllerParameters(PLC plc, uint axisID, uint loopID)
     {
-        object[] varsin = {axisID, loopID};
-        object[] varsout = new object [1];
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadControllerParameters", varsin, out varsout);
-        return varsout;
+        object[] controllerInputArray = {axisID, loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_ReadControllerParameters", controllerInputArray, out object[]? controllerOutputArray); // object variable is read from the PLC
+        
+        if (controllerOutputArray is null){
+            object[] emptyObject = new object[0];
+            return emptyObject;
+        }
+        return controllerOutputArray;
     }
 
     #endregion
 
     #region motion commands
-    public void MoveAbsolute(PLC plc, uint axisID, uint loopID, double position, double velocity)
+    public void MoveAbsolute(PLC plc, uint axisID, uint loopID, double position, double velocity) // TODO: make this a object array that is passed to the function
     {
-        object[] varsEnable = {axisID,loopID};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",varsEnable);
-        object[] vars = {axisID,loopID,position,velocity};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveAbsolute",vars);
+        object[] enableInputArray = {axisID,loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",enableInputArray); // call enable axis method
+        object[] absoluteInputArray = {axisID,loopID,position,velocity};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveAbsolute",absoluteInputArray); // call move absolute method
     }
 
-    public void MoveRelative(PLC plc, uint axisID, uint loopID, double position, double velocity)
+    public void MoveRelative(PLC plc, uint axisID, uint loopID, double position, double velocity) // TODO: make this a object array that is passed to the function
     {
-        object[] varsEnable = {axisID,loopID};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",varsEnable);
-        object[] vars = {axisID,loopID,position,velocity};
-        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveRelative",vars);
+        object[] enableInputArray = {axisID,loopID};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_EnableAxis",enableInputArray); // call enable axis method
+        object[] relativeInputArray = {axisID,loopID,position,velocity};
+        plc.TcADS.InvokeRpcMethod("MAIN.FB_Functions","M_MoveRelative",relativeInputArray); // call move relative method 
     }
+
+    // TODO: add move home function
 
     #endregion
     

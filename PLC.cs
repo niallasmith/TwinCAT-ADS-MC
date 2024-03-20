@@ -1,3 +1,6 @@
+// code that handles connection to/from PLC
+// some basic PLC state functions
+
 namespace TwinCAT_ADS_MC;
 
 using System.Data;

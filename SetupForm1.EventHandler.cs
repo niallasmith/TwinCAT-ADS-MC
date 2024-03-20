@@ -1,4 +1,4 @@
-// Event handler for handling Form1 events e.g. buttons pressed etc.
+// Event handler for handling setup form events e.g. buttons pressed etc.
 
 using System.Xml.Serialization;
 using TwinCAT.Ads;
@@ -9,8 +9,63 @@ namespace TwinCAT_ADS_MC;
 partial class SetupForm1
 {
 
-    private void setAxisParams_Click(object sender, EventArgs e)
+    private void timer2_Tick(object sender, EventArgs e) // timer interval triggered
     {
+        if (ncAxis is null) // if ncaxis is null (has not yet been connected to)
+        {
+            return; // early return to prevent errors
+        }
+
+        // read axis parameters from the PLC and refresh the form data
+        object[] axisOutputArray = (object[])ncAxis.ReadAxisParameters(myPLC, axisID, loopID);
+        RefreshAxisData(axisOutputArray);
+
+        // read encoder parameters from the PLC and refresh the form data
+        object[] encoderOutputArray = (object[])ncAxis.ReadEncoderParams(myPLC, axisID, loopID);
+        RefreshEncoderData(encoderOutputArray);
+
+        // read drive parameters from the PLC and refresh the form data
+        object[] driveOutputArray = (object[])ncAxis.ReadDriveParameters(myPLC, axisID, loopID);
+        RefreshDriveData(driveOutputArray);
+
+        // read controller parameters from the PLC and refresh the form data
+        object[] controllerOutputArray = (object[])ncAxis.ReadControllerParameters(myPLC, axisID, loopID);
+        RefreshControllerData(controllerOutputArray);
+    }
+
+    private void controlLoopRadio_Click(object sender, EventArgs e) // if either of the control loop switching radio buttons are clicked
+    {
+        if(controlLoop1Radio.Checked) // if radio button 1 pressed
+        {
+            loopID = 0; // set loop id
+            object[] loopInputArray = {axisID, loopID};
+            ncAxis.SetActiveControlLoop(myPLC, loopInputArray); // call method on PLC to change control loop to loop ID
+        } 
+
+        if(controlLoop2Radio.Checked)// if radio button 2 pressed
+        {
+            loopID = 1; // set loop id
+            object[] loopInputArray = {axisID, loopID};
+            ncAxis.SetActiveControlLoop(myPLC, loopInputArray); // call method on PLC to change control loop to loop ID
+        }
+    }
+
+    private void getCurrentLoopID()
+    {
+        UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC,axisID)[0]; // call read active loop function to get current loop ID from PLC
+
+        if (activeLoopID == 1)
+        {
+            controlLoop2Radio.Checked = true; // check the radio button if active loop ID is 1
+        } else
+        {
+            controlLoop1Radio.Checked = true;
+        }
+    }
+
+    private void setAxisParams_Click(object sender, EventArgs e) // set axis parameters button clicked
+    {
+        // define some temporary local variables
         double maxVeloc;
         double maxAccel;
         double defaultAccel;
@@ -22,19 +77,21 @@ partial class SetupForm1
 
         #region value handling
 
-        if (maxVelocityText.Text == "") 
+        // if user has left entry blank, define that parameter as the actual read value, therefore nothing should change but we are still writing /something/ to the method
+
+        if (maxVelocityText.Text == "") // if entered text is blank
         {
-            maxVeloc = Convert.ToDouble(maxVelocityActualText.Text);
+            maxVeloc = Convert.ToDouble(maxVelocityActualText.Text); // write the values read from the PLC to the temporary variable 
         } 
-        else
+        else // if not blank
         {
             try
             {  
-                maxVeloc = Convert.ToDouble(maxVelocityText.Text);
+                maxVeloc = Convert.ToDouble(maxVelocityText.Text); // try convert to double. if success, write to temporary variable
             }
             catch
             {
-                return;
+                return; // if not, return early.
             }
         }
 
@@ -151,50 +208,13 @@ partial class SetupForm1
         }
         #endregion
 
-        object[] vars = {axisID,loopID,maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement};
-        ncAxis.WriteAxisParameters(myPLC,vars);
+        object[] axisInputArray = {axisID,loopID,maxVeloc,maxAccel,defaultAccel,defaultJerk,homingVeloc,manualVelocFast,manualVelocSlow,jogIncrement}; // put all handled parameters into an object array
+        ncAxis.WriteAxisParameters(myPLC,axisInputArray); // pass object array to write axis parameters function in NCAxis.cs
     }
 
-    private void timer2_Tick(object sender, EventArgs e) // timer interval triggered
+    private void encoderParamsSetButton_Click(object sender, EventArgs e) // set encoder parameters button clicked
     {
-        if (ncAxis is null)
-        {
-            return;
-        }
-
-        object[] vars = new object[8];
-
-        vars = (object[])ncAxis.ReadAxisParameters(myPLC, axisID, loopID);
-        RefreshAxisData(vars);
-        object[] encoderVars = new object[5];
-        encoderVars = (object[])ncAxis.ReadEncoderParams(myPLC, axisID, loopID);
-        RefreshEncoderData(encoderVars);
-
-        object[] driveVars = new object[2];
-        driveVars = (object[])ncAxis.ReadDriveParameters(myPLC, axisID, loopID);
-        RefreshDriveData(driveVars);
-
-        object[] controllerVars = new object[1];
-        controllerVars = (object[])ncAxis.ReadControllerParameters(myPLC, axisID, loopID);
-        RefreshControllerData(controllerVars);
-    }
-
-    private void controlLoopRadio_Click(object sender, EventArgs e)
-    {
-        if(controlLoop1Radio.Checked)
-        {
-            loopID = 0;
-            ncAxis.SetActiveControlLoop(myPLC, axisID, loopID);
-        } 
-        if(controlLoop2Radio.Checked) 
-        {
-            loopID = 1;
-            ncAxis.SetActiveControlLoop(myPLC, axisID, loopID);
-        }
-    }
-
-    private void encoderParamsSetButton_Click(object sender, EventArgs e)
-    {
+        // define some temporary local variables
         bool invertDirection;
         double scalingFactorNum;
         double scalingFactorDen;
@@ -203,7 +223,7 @@ partial class SetupForm1
 
         #region value handling
 
-        invertDirection = encoderInvertedDirectionCheck.Checked;
+        invertDirection = encoderInvertedDirectionCheck.Checked; // no value handling required
 
         if (encoderScalingNumeratorText.Text == "") 
         {
@@ -271,26 +291,46 @@ partial class SetupForm1
 
         #endregion
 
-        object[] vars = {axisID,loopID,invertDirection,scalingFactorNum,scalingFactorDen,offset,mask};
+        object[] encoderInputArray = {axisID,loopID,invertDirection,scalingFactorNum,scalingFactorDen,offset,mask}; // put all handled parameters into an object array
 
-        ncAxis.WriteEncoderParameters(myPLC,vars);
+        ncAxis.WriteEncoderParameters(myPLC,encoderInputArray); // call write encoder parameters method on the PLC, pass it the parameter object array
     }
 
-    private void getCurrentLoopID()
+    private void setDriveParamsButton_Click(object sender, EventArgs e) // set drive parameters button clicked
     {
-        UInt16 activeLoopID = (UInt16)ncAxis.ReadActiveLoop(myPLC,axisID)[0];
+        // define some temporary local variables
+        bool invertPolarity;
+        double refvelo;
+        
+        #region value handling
 
-        if (activeLoopID == 1)
+        invertPolarity = driveInvertCheck.Checked; // no value handling required
+
+        if (encoderMaskText.Text == "") 
         {
-            controlLoop2Radio.Checked = true;
-        } else
+            refvelo = Convert.ToDouble(driveReferenceVeloActualText.Text);
+        } 
+        else
         {
-            controlLoop1Radio.Checked = true;
+            try
+            {  
+                refvelo = Convert.ToDouble(driveReferenceVeloText.Text);
+            }
+            catch
+            {
+                return;
+            }
         }
+
+        #endregion
+
+        object[] driveInputArray = {axisID, loopID, invertPolarity, refvelo}; // put all handled parameters into an object array
+        ncAxis.WriteDriveParameters(myPLC, driveInputArray); // call write drive parameters method on the PLC, pass it the parameter object array
     }
 
-    private void setControllerParamsButton_Click(object sender, EventArgs e)
+    private void setControllerParamsButton_Click(object sender, EventArgs e) // set controller parameters button clicked
     {
+        // define some temporary local variables
         double kvparam;
 
         #region value handling
@@ -313,39 +353,8 @@ partial class SetupForm1
 
         #endregion
 
-        object[] vars = {axisID, loopID,kvparam};
-        ncAxis.WriteControllerParameters(myPLC, vars);
-    }
-
-    private void setDriveParamsButton_Click(object sender, EventArgs e)
-    {
-        bool invertPolarity;
-        double refvelo;
-        
-        #region value handling.
-
-        invertPolarity = driveInvertCheck.Checked;
-
-        if (encoderMaskText.Text == "") 
-        {
-            refvelo = Convert.ToDouble(driveReferenceVeloActualText.Text);
-        } 
-        else
-        {
-            try
-            {  
-                refvelo = Convert.ToDouble(driveReferenceVeloText.Text);
-            }
-            catch
-            {
-                return;
-            }
-        }
-
-        #endregion
-
-        object[] vars = {axisID, loopID, invertPolarity, refvelo};
-        ncAxis.WriteDriveParameters(myPLC, vars);
+        object[] controllerInputArray = {axisID, loopID,kvparam}; // put all handled parameters into an object array
+        ncAxis.WriteControllerParameters(myPLC, controllerInputArray); // call write controller parameters method on the PLC, pass it the parameter object array
     }
 
 }
