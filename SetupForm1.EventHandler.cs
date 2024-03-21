@@ -3,6 +3,9 @@
 using System.Xml.Serialization;
 using TwinCAT.Ads;
 using TwinCAT.Ads.TypeSystem;
+using System.Xml;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace TwinCAT_ADS_MC;
 
@@ -378,5 +381,141 @@ partial class SetupForm1
 
         object[] actualPositionArray = {axisID, loopID, actualPosition};
         ncAxis.SetActualPosition(myPLC,actualPositionArray);
+    }
+
+    private void loadFromFileButton_Click(object sender, EventArgs e)
+    {
+        string filepath;
+        ushort invertedEncoderDirection;
+        ushort invertedDriveDirection;
+
+        // user input value handling TODO
+        filepath = loadFilepathTextbox.Text;
+
+        var xmlDoc = XDocument.Load(filepath);
+
+        var localLoopID = Convert.ToUInt16(xmlDoc.Root.Element("encoderSetup")?.Element("activeControlLoop")?.Value);
+
+        #region load axis params
+
+        //var name = xmlDoc.Root.Element("Name")?.Value;
+        var maxVelocity = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("maxVelocity")?.Value);
+        var maxAcceleration = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("maxAcceleration")?.Value);
+        var defaultAcceleration = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("defaultAcceleration")?.Value);
+        var defaultJerk = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("defaultJerk")?.Value);
+        var homingVelocity = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("homingVelocity")?.Value);
+        var manualVelocityFast = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("manualVelocityFast")?.Value);
+        var manualVelocitySlow = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("manualVelocitySlow")?.Value);
+        var jogIncrement = Convert.ToDouble(xmlDoc.Root.Element("axisSetup")?.Element("jogIncrement")?.Value);
+
+        object[] axisInputArray = {axisID,localLoopID,maxVelocity,maxAcceleration,defaultAcceleration,defaultJerk,homingVelocity,manualVelocityFast,manualVelocitySlow,jogIncrement};
+        ncAxis.WriteAxisParameters(myPLC,axisInputArray);
+
+        #endregion
+
+        #region load encoder params
+
+        var activeControlLoop = Convert.ToUInt16(xmlDoc.Root.Element("axisSetup")?.Element("activeControlLoop")?.Value);
+
+        object[] loopInputArray = {axisID,activeControlLoop+1};
+        ncAxis.SetActiveControlLoop(myPLC,loopInputArray);
+
+        var tempEncoderValue = xmlDoc.Root.Element("encoderSetup")?.Element("invertedDirection")?.Value;
+
+        if (tempEncoderValue == "True")
+        {
+            invertedEncoderDirection = 1;
+        } else 
+        {
+            invertedEncoderDirection = 0;
+        }
+
+        var scalingFactorNumerator = Convert.ToDouble(xmlDoc.Root.Element("encoderSetup")?.Element("scalingFactorNumerator")?.Value);
+        var scalingFactorDenominator = Convert.ToDouble(xmlDoc.Root.Element("encoderSetup")?.Element("scalingFactorDenominator")?.Value);
+        var encoderOffset = Convert.ToDouble(xmlDoc.Root.Element("encoderSetup")?.Element("encoderOffset")?.Value);
+        var encoderMask = Convert.ToDouble(xmlDoc.Root.Element("encoderSetup")?.Element("encoderMask")?.Value);
+        object[] encoderInputArray = {axisID,localLoopID,invertedEncoderDirection,scalingFactorNumerator,scalingFactorDenominator,encoderOffset,encoderMask};
+        ncAxis.WriteEncoderParameters(myPLC,encoderInputArray);
+
+        #endregion
+
+        #region load drive params
+
+        var tempDriveValue = xmlDoc.Root.Element("driveSetup")?.Element("invertedMotor")?.Value;
+
+        if (tempDriveValue == "True")
+        {
+            invertedDriveDirection = 1;
+        } else 
+        {
+            invertedDriveDirection = 0;
+        }
+
+        var referenceVelocity = Convert.ToDouble(xmlDoc.Root.Element("driveSetup")?.Element("referenceVelocity")?.Value);
+        object[] driveInputArray = {axisID,localLoopID,invertedDriveDirection,referenceVelocity};
+        ncAxis.WriteDriveParameters(myPLC,driveInputArray);
+
+        #endregion
+
+        #region load controller params
+
+        var kvParam = Convert.ToDouble(xmlDoc.Root.Element("controllerSetup")?.Element("kvParam")?.Value);
+        object[] controllerInputArray = {axisID,localLoopID,kvParam};
+        ncAxis.WriteControllerParameters(myPLC,controllerInputArray);
+
+        #endregion
+
+        MessageBox.Show("success");
+
+    }
+
+    private void saveToFileButton_Click(object sender, EventArgs e)
+    {
+        string filepath;
+
+        // user input value handling TODO
+        filepath = saveFilepathTextbox.Text;
+
+        using (XmlTextWriter writer = new XmlTextWriter(filepath, null))
+        {
+            writer.Formatting = Formatting.Indented;
+
+            writer.WriteStartDocument();
+            writer.WriteStartElement("setupData");
+
+            writer.WriteStartElement("axisSetup");
+            writer.WriteElementString("maxVelocity", Convert.ToString(maxVelocityActualText.Text));
+            writer.WriteElementString("maxAcceleration", Convert.ToString(maxAccelerationActualText.Text));
+            writer.WriteElementString("defaultAcceleration", Convert.ToString(defaultAccelActualText.Text));
+            writer.WriteElementString("defaultJerk", Convert.ToString(defaultJerkActualText.Text));
+            writer.WriteElementString("homingVelocity", Convert.ToString(homingVelocActualText.Text));
+            writer.WriteElementString("manualVelocityFast", Convert.ToString(manualVelocFastActualText.Text));
+            writer.WriteElementString("manualVelocitySlow", Convert.ToString(manualVelocSlowActualText.Text));
+            writer.WriteElementString("jogIncrement", Convert.ToString(jogIncrementActualText.Text));
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("encoderSetup");
+            writer.WriteElementString("activeControlLoop", Convert.ToString(loopID));
+            writer.WriteElementString("invertedDirection", Convert.ToString(encoderInvertedDirectionCheck.Checked));
+            writer.WriteElementString("scalingFactorNumerator", Convert.ToString(encoderScalingNumeratorReadText.Text));
+            writer.WriteElementString("scalingFactorDenominator", Convert.ToString(encoderScalingDenominatorReadText.Text));
+            writer.WriteElementString("encoderOffset", Convert.ToString(encoderOffsetReadText.Text));
+            writer.WriteElementString("encoderMask", Convert.ToString(encoderMaskReadText.Text));
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("driveSetup");
+            writer.WriteElementString("invertedMotor", Convert.ToString(driveInvertCheck.Checked));
+            writer.WriteElementString("referenceVelocity", Convert.ToString(driveReferenceVeloActualText.Text));
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("controllerSetup");
+            writer.WriteElementString("kvParam", Convert.ToString(loopID));
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+        }
+
+        MessageBox.Show("Save file successful");
     }
 }
