@@ -13,7 +13,7 @@ public class Program
     static void Main()
     {
         // Main start point of code
-        Application.SetHighDpiMode(HighDpiMode.SystemAware); // should scale the GUI to fit with high DPI screens - not sure this works as intended?
+        Application.SetHighDpiMode(HighDpiMode.DpiUnaware); // should scale the GUI to fit with high DPI screens - not sure this works as intended?
         ApplicationConfiguration.Initialize();
         MCForm1 MCform1 = new MCForm1();
         Application.Run(MCform1); // opens main GUI (MCForm1)

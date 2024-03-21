@@ -185,13 +185,13 @@ public partial class MCForm1
 
     private void axesSetupButton_Click(object sender, EventArgs e) // axis setup button clicked
     {
-        if (myPLC is null || ncAxis is null)
+        if (myPLC is null || ncAxis is null || AMSID is null)
         {
             MessageBox.Show("PLC or NCAxis is null");
             return;
         }
 
-        SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axisID); // create setup form
+        SetupForm1 SetupForm = new SetupForm1(myPLC,ncAxis,axisID,AMSID,Port); // create setup form
         SetupForm.ShowDialog(); // display setup form
     }
 
@@ -335,7 +335,8 @@ public partial class MCForm1
         try
         {
             ncAxis = new NCAxis(myPLC, axisID); // if successful, create new ncAxis object related to axis
-            axisConnectedLabel.Text = "Connected"; // change label text
+            //string text = String.Format("Connected to axis ",axisID);
+            axisConnectedLabel.Text = "Connected to axis " + (axisID+1); // change label text
         }
         catch
         {

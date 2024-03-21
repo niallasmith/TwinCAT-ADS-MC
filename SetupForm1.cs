@@ -10,13 +10,17 @@ public partial class SetupForm1 : Form
     public PLC myPLC;
     public NCAxis ncAxis;
     public uint axisID;
+    public string amsID;
+    public int portID;
     public uint loopID = 0; // initialise loop ID as 0
-    public SetupForm1(PLC myPLCIn, NCAxis ncAxisIn, uint axisIDIn) // constructor for SetupForm1
+    public SetupForm1(PLC myPLCIn, NCAxis ncAxisIn, uint axisIDIn, string amsIDIn, int portIDIn) // constructor for SetupForm1
     {
         // PLC, ncAxis and axis ID have been passed to this form from MCForm1
         myPLC = myPLCIn;
         ncAxis = ncAxisIn;
         axisID = axisIDIn;
+        amsID = amsIDIn;
+        portID = portIDIn;
 
         SetupInitializeComponent(); // call function in SetupForm1.Designer
     }
@@ -55,6 +59,12 @@ public partial class SetupForm1 : Form
     {
         // object array passed to this function comes from timer 2 tick, reading controller parameters
         controllerKvActualText.Text = Convert.ToString(readControllerDataArray[0]);
+    }
+
+    public void RefreshActiveLoop(object[] activeControlLoop)
+    {
+        // object array passed to this function comes from timer 2 tick, reading active loop
+        activeControlLoopText.Text = Convert.ToString(activeControlLoop[0]);
     }
 
 }

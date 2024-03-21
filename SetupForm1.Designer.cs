@@ -1,6 +1,8 @@
 // SetupForm1 design code.
 // setups up basic form design and controls
 
+using TwinCAT.Ads;
+
 namespace TwinCAT_ADS_MC;
 
 partial class SetupForm1
@@ -51,6 +53,8 @@ partial class SetupForm1
     public RadioButton controlLoop2Radio;
     public Label controlLoop1Label;
     public Label controlLoop2Label;
+    public Label activeControlLoopLabel;
+    public TextBox activeControlLoopText;
     public CheckBox encoderInvertedDirectionCheck;
     public TextBox encoderScalingNumeratorText;
     public TextBox encoderScalingDenominatorText;
@@ -110,6 +114,7 @@ partial class SetupForm1
     public Label saveFilepathLabel;
     public TextBox saveFilepathTextbox;
     public Button saveToFileButton;
+    public Label connectedToLabel;
 
     #endregion
 
@@ -400,27 +405,39 @@ partial class SetupForm1
 
         controlLoop1Radio = new RadioButton();
         controlLoop1Radio.Size = new Size(20,20);
-        controlLoop1Radio.Location = new Point(320,60);
+        controlLoop1Radio.Location = new Point(305,60);
         this.Controls.Add(controlLoop1Radio);
         controlLoop1Radio.Click += new EventHandler(controlLoopRadio_Click);
 
         controlLoop1Label = new Label();
-        controlLoop1Label.Size = new Size(100,20);
-        controlLoop1Label.Location = new Point(345,60);
+        controlLoop1Label.Size = new Size(90,20);
+        controlLoop1Label.Location = new Point(325,60);
         controlLoop1Label.Text = "Control loop 1";
         this.Controls.Add(controlLoop1Label);
 
         controlLoop2Radio = new RadioButton();
         controlLoop2Radio.Size = new Size(20,20);
-        controlLoop2Radio.Location = new Point(320,80);
+        controlLoop2Radio.Location = new Point(305,80);
         this.Controls.Add(controlLoop2Radio);
         controlLoop2Radio.Click += new EventHandler(controlLoopRadio_Click);
 
         controlLoop2Label = new Label();
-        controlLoop2Label.Size = new Size(100,20);
-        controlLoop2Label.Location = new Point(345,80);
+        controlLoop2Label.Size = new Size(90,20);
+        controlLoop2Label.Location = new Point(325,80);
         controlLoop2Label.Text = "Control loop 2";
         this.Controls.Add(controlLoop2Label);
+
+        activeControlLoopLabel = new Label();
+        activeControlLoopLabel.Size = new Size(80,40);
+        activeControlLoopLabel.Location = new Point(430,60);
+        activeControlLoopLabel.Text = "Active control loop:";
+        this.Controls.Add(activeControlLoopLabel);
+
+        activeControlLoopText = new TextBox();
+        activeControlLoopText.Size = new Size(40,20);
+        activeControlLoopText.Location = new Point(520,60);
+        activeControlLoopText.ReadOnly = true;
+        this.Controls.Add(activeControlLoopText);
 
         getCurrentLoopID(); // get the current control loop ID
 
@@ -738,6 +755,17 @@ partial class SetupForm1
         saveToFileButton.Text = "Save";
         this.Controls.Add(saveToFileButton);
         saveToFileButton.Click += new EventHandler(saveToFileButton_Click);
+
+        #endregion
+
+        #region connected to
+
+        connectedToLabel = new Label();
+        connectedToLabel.Size = new Size(700,20);
+        connectedToLabel.Location = new Point(20,380);
+        connectedToLabel.Text = "Connected to axis " + (axisID+1) + ", on PLC AMS NET ID " + amsID + ", at port " + portID;
+        
+        this.Controls.Add(connectedToLabel);
 
         #endregion
 

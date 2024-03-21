@@ -34,6 +34,9 @@ partial class SetupForm1
         // read controller parameters from the PLC and refresh the form data
         object[] controllerOutputArray = (object[])ncAxis.ReadControllerParameters(myPLC, axisID, loopID);
         RefreshControllerData(controllerOutputArray);
+
+        object[] activeControlLoop = ncAxis.ReadActiveLoop(myPLC,axisID);
+        RefreshActiveLoop(activeControlLoop);
     }
 
     private void controlLoopRadio_Click(object sender, EventArgs e) // if either of the control loop switching radio buttons are clicked
@@ -394,6 +397,12 @@ partial class SetupForm1
 
         var xmlDoc = XDocument.Load(filepath);
 
+        if (xmlDoc.Root is null)
+        {
+            MessageBox.Show("xml document is null");
+            return;
+        }
+
         var localLoopID = Convert.ToUInt16(xmlDoc.Root.Element("encoderSetup")?.Element("activeControlLoop")?.Value);
 
         #region load axis params
@@ -465,7 +474,7 @@ partial class SetupForm1
 
         #endregion
 
-        MessageBox.Show("success");
+        MessageBox.Show("Load success");
 
     }
 
@@ -495,7 +504,7 @@ partial class SetupForm1
             writer.WriteEndElement();
 
             writer.WriteStartElement("encoderSetup");
-            writer.WriteElementString("activeControlLoop", Convert.ToString(loopID));
+            writer.WriteElementString("activeControlLoop", Convert.ToString(activeControlLoopText.Text));
             writer.WriteElementString("invertedDirection", Convert.ToString(encoderInvertedDirectionCheck.Checked));
             writer.WriteElementString("scalingFactorNumerator", Convert.ToString(encoderScalingNumeratorReadText.Text));
             writer.WriteElementString("scalingFactorDenominator", Convert.ToString(encoderScalingDenominatorReadText.Text));

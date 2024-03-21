@@ -12,6 +12,7 @@ public partial class MCForm1 : Form
     public MCForm1()
     {
         InitializeComponent(); // upon running MCForm1, this is called. InitializeComponent is held within MCForm1.Designer
+        this.AutoScaleMode = AutoScaleMode.Dpi;    
     }
 
     public void RefreshMotionData(object[] readMotionArray) // refresh data in form

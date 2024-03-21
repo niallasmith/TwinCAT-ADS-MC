@@ -362,7 +362,7 @@ partial class MCForm1
         this.Controls.Add(plcConnectedLabel);
 
         axisConnectedLabel = new Label();
-        axisConnectedLabel.Size = new Size(100,20);
+        axisConnectedLabel.Size = new Size(110,20);
         axisConnectedLabel.Location = new Point(225,150);
         axisConnectedLabel.Text = "Disconnected"; // intially set text as disconnected. this will be changed to connected only when axis is connected
         axisConnectedLabel.Font = new Font(FontFamily.GenericSansSerif, 8.0F, FontStyle.Italic);
